@@ -72,6 +72,13 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void gamePanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanelMouseClicked
+        final int SQUARE_SIZE = 60;
+        final int GRID_SIZE = 8;
+        int row = evt.getY() / SQUARE_SIZE;
+        int col = evt.getX() / SQUARE_SIZE;
+        
+        System.out.println("Row: " + row);
+        System.out.println("Column: " + col);
         
     }//GEN-LAST:event_gamePanelMouseClicked
 
