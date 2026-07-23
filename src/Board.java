@@ -4,9 +4,13 @@
  */
 
 /**
- *
- * @author Devin
+ * 
+ * @author Shawn Saunders
  */
 public class Board {
+    private static final int SQUARE_SIZE = 60;
+    private static final int GRID_SIZE = 8;
+    
+    
     
 }
