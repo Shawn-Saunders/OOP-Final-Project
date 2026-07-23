@@ -3,14 +3,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
+import javax.swing.JPanel;
+import java.awt.GridLayout;
+
 /**
  * 
  * @author Shawn Saunders
  */
-public class Board {
-    private static final int SQUARE_SIZE = 60;
-    private static final int GRID_SIZE = 8;
-    
-    
+public class Board extends JPanel {
+    // Create an 8x8 grid of square objects to generate
+    // the board 
+    public Board() {
+        // Create the 8x8 grid
+        setLayout(new GridLayout(8,8));
+        
+        // Populate grid with Square labels
+        for (int row = 0; row < 8; row++){
+            for(int col = 0; col < 8; col++){
+                Square square = new Square(row,col);
+                add(square);
+            }
+        }
+    }
     
 }
