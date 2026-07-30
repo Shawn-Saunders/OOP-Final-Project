@@ -12,8 +12,14 @@ public class MainFrame extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainFrame.class.getName());
 
-    JLabel[][] squares = new JLabel[8][8];
+    // Create an array to hold all the information from each square
+    JLabel[][] squareLabels = new JLabel[8][8];
+    
+    // Create an array to hold all the piece locations on the board
     Piece[][] board = new Piece[8][8];
+    
+    public final int MIN = 0;
+    public final int MAX = 8;
     
     /**
      * Creates new form MainFrame
@@ -21,25 +27,22 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         
-        int blacks = 0;
-        int reds = 0;
+        // Declare variables
         int index = 0;
-        int row = 0;
-        int col = 0;
+        int row = MIN;
+        int col = MIN;
         
-        // calculate the number of red and black pieces and populate the
-        // 2d squares array with all of the correct grid locations
-        
+        // Create objects for all red and black pieces
         for(Component square : gamePanel.getComponents())
         {
             JLabel piece = (JLabel) square;
-            row = index / 8;
-            col = index % 8;
-            squares[row][col] = piece;
+            row = index / MAX;
+            col = index % MAX;
+            squareLabels[row][col] = piece;
             index++;
-            if(piece.getName() != null && piece.getName().equals("black"))
+            if("black".equals(piece.getName()))
                 board[row][col] = new Regular("black",row,col);
-            else if (piece.getName() != null && piece.getName().equals("red"))
+            else if ("red".equals(piece.getName()))
                 board[row][col] = new Regular("red",row,col);
         }
         
@@ -495,12 +498,14 @@ public class MainFrame extends javax.swing.JFrame {
         final int SQUARE_SIZE = 60;
         int row = evt.getY() / SQUARE_SIZE;
         int col = evt.getX() / SQUARE_SIZE;
+        Piece selectedPiece = board[row][col];
         
         // Check if the square is empty
-        if (squares[row][col].getName() == null){
+        if (squareLabels[row][col].getName() == null){
             System.out.println("You clicked the an empty square!");
         } else {
-            System.out.println("You clicked the a " + squares[row][col].getName() + " piece!");
+            System.out.println("You clicked the a " + squareLabels[row][col].getName() + " piece!");
+            int[][] moves = selectedPiece.getValidMoves(board);
         }
         
 //        try{

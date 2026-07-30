@@ -1,5 +1,6 @@
 
-import javax.swing.JLabel;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -7,8 +8,8 @@ import javax.swing.JLabel;
  */
 
 /**
- *
- * @author Devin
+ * Subclass of Piece, creates a king checker piece that can move all directions
+ * @author Shawn
  */
 public class King extends Piece {
     /**
@@ -21,9 +22,9 @@ public class King extends Piece {
     }
     
     @Override
-    int[][] getValidMoves(JLabel[][] board){
-        int validMoves[][];
+    public int[][] getValidMoves(Piece[][] board){
+        List<int[]> validMoves = new ArrayList<>();
         
-        return validMoves;
+        return validMoves.toArray(new int[0][])
     }
 }

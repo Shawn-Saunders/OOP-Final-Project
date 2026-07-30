@@ -1,5 +1,6 @@
 
-import javax.swing.JLabel;
+import java.util.List;
+import java.util.ArrayList;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -7,8 +8,8 @@ import javax.swing.JLabel;
  */
 
 /**
- *
- * @author Devin
+ * Subclass of Piece, creates a regular checker piece that can only move forwards
+ * @author Shawn
  */
 public class Regular extends Piece {
     /**
@@ -20,10 +21,16 @@ public class Regular extends Piece {
         this.col = col;
     }
     
+    /**
+     * Gets every valid move a selected piece can make
+     * @param board The entire board, holding the location of each piece
+     * @return Every valid position the piece can move to
+     */
     @Override
-    int[][] getValidMoves(JLabel[][] board){
-        // Create an empty list of validMoves
-        int validMoves[][];
+    public int[][] getValidMoves(Piece[][] board){
+        // Create an empty list of validMoves using List and ArrayList
+        // because we dont know how many moves there will be
+        List<int[]> validMoves = new ArrayList<>();
         int forward = 0;
         
         //Determine forward direction based on piece color
@@ -37,16 +44,22 @@ public class Regular extends Piece {
         int[] forwardLeft = {this.row + forward, this.col - 1};
         int[] forwardRight = {this.row + forward, this.col + 1};
         
-        // Calculate the two diections
-        
-        // check bounds
-        
-        // Check if square is empty
+        // Check if the move is valid, if it is then add it to the array
+        int[] leftResult = isMoveValid(board, forwardLeft[0], forwardLeft[1]);
+        if (leftResult != null){
+            validMoves.add(leftResult);
+            System.out.println("Left move is valid");
+        }
+        int[] rightResult = isMoveValid(board, forwardRight[0], forwardRight[1]);
+        if (rightResult != null){
+            validMoves.add(rightResult);
+            System.out.println("Right move is valid");
+        }
         
         // If there is an opponent, calculate jump
-        
-        // 
-        
-        return validMoves;
+
+        // After the number of moves is determined, we can send the moves back
+        // as a new int[][] like origonally planned
+        return validMoves.toArray(new int[0][]);
     }
 }
