@@ -192,10 +192,7 @@
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="5" green="14" red="32" type="rgb"/>
             </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/black.png"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="black" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="" noResource="true"/>
             <Property name="opaque" type="boolean" value="true"/>
           </Properties>
         </Component>
@@ -273,9 +270,9 @@
               <Color blue="5" green="14" red="32" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/black.png"/>
+              <Image iconType="3" name="/blackKing.png"/>
             </Property>
-            <Property name="name" type="java.lang.String" value="black" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="blackKing" noResource="true"/>
             <Property name="opaque" type="boolean" value="true"/>
           </Properties>
         </Component>
@@ -530,9 +527,9 @@
               <Color blue="5" green="14" red="32" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/red.png"/>
+              <Image iconType="3" name="/redKing.png"/>
             </Property>
-            <Property name="name" type="java.lang.String" value="red" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="redKing" noResource="true"/>
             <Property name="opaque" type="boolean" value="true"/>
           </Properties>
         </Component>
@@ -609,10 +606,7 @@
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="5" green="14" red="32" type="rgb"/>
             </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/red.png"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="red" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="" noResource="true"/>
             <Property name="opaque" type="boolean" value="true"/>
           </Properties>
         </Component>
