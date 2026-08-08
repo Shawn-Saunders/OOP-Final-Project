@@ -2,7 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
+import java.awt.Component;
+import javax.swing.JLabel;
 /**
  *
  * @author Devin
@@ -11,13 +12,46 @@ public class MainFrame extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainFrame.class.getName());
 
+    // Create an array to hold all the information from each square
+    JLabel[][] squareLabels = new JLabel[8][8];
+    
+    // Create an array to hold all the piece locations on the board
+    Piece[][] board = new Piece[8][8];
+    
+    public final int BOARD_WIDTH = 8;
+    
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
+        
+        // Declare variables
+        int index = 0;
+        int row;
+        int col;
+        
+        // Create objects for all red and black pieces
+        for(Component square : gamePanel.getComponents())
+        {
+            JLabel piece = (JLabel) square;
+            row = index / BOARD_WIDTH;
+            col = index % BOARD_WIDTH;
+            squareLabels[row][col] = piece;
+            index++;
+            if("black".equals(piece.getName()))
+                board[row][col] = new Regular("black",row,col);
+            else if ("red".equals(piece.getName()))
+                board[row][col] = new Regular("red",row,col);
+            else if ("blackKing".equals(piece.getName()))
+                board[row][col] = new King("black",row,col);
+            else if ("redKing".equals(piece.getName()))
+                board[row][col] = new King("red",row,col);
+        }
+        
     }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,21 +61,460 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        gamePanel = new javax.swing.JPanel();
+        squareLabel1 = new javax.swing.JLabel();
+        squareLabel2 = new javax.swing.JLabel();
+        squareLabel3 = new javax.swing.JLabel();
+        squareLabel4 = new javax.swing.JLabel();
+        squareLabel5 = new javax.swing.JLabel();
+        squareLabel6 = new javax.swing.JLabel();
+        squareLabel7 = new javax.swing.JLabel();
+        squareLabel8 = new javax.swing.JLabel();
+        squareLabel9 = new javax.swing.JLabel();
+        squareLabel10 = new javax.swing.JLabel();
+        squareLabel11 = new javax.swing.JLabel();
+        squareLabel12 = new javax.swing.JLabel();
+        squareLabel13 = new javax.swing.JLabel();
+        squareLabel14 = new javax.swing.JLabel();
+        squareLabel15 = new javax.swing.JLabel();
+        squareLabel16 = new javax.swing.JLabel();
+        squareLabel17 = new javax.swing.JLabel();
+        squareLabel18 = new javax.swing.JLabel();
+        squareLabel19 = new javax.swing.JLabel();
+        squareLabel20 = new javax.swing.JLabel();
+        squareLabel21 = new javax.swing.JLabel();
+        squareLabel22 = new javax.swing.JLabel();
+        squareLabel23 = new javax.swing.JLabel();
+        squareLabel24 = new javax.swing.JLabel();
+        squareLabel25 = new javax.swing.JLabel();
+        squareLabel26 = new javax.swing.JLabel();
+        squareLabel27 = new javax.swing.JLabel();
+        squareLabel28 = new javax.swing.JLabel();
+        squareLabel29 = new javax.swing.JLabel();
+        squareLabel30 = new javax.swing.JLabel();
+        squareLabel31 = new javax.swing.JLabel();
+        squareLabel32 = new javax.swing.JLabel();
+        squareLabel33 = new javax.swing.JLabel();
+        squareLabel34 = new javax.swing.JLabel();
+        squareLabel35 = new javax.swing.JLabel();
+        squareLabel36 = new javax.swing.JLabel();
+        squareLabel37 = new javax.swing.JLabel();
+        squareLabel38 = new javax.swing.JLabel();
+        squareLabel39 = new javax.swing.JLabel();
+        squareLabel40 = new javax.swing.JLabel();
+        squareLabel41 = new javax.swing.JLabel();
+        squareLabel42 = new javax.swing.JLabel();
+        squareLabel43 = new javax.swing.JLabel();
+        squareLabel44 = new javax.swing.JLabel();
+        squareLabel45 = new javax.swing.JLabel();
+        squareLabel46 = new javax.swing.JLabel();
+        squareLabel47 = new javax.swing.JLabel();
+        squareLabel48 = new javax.swing.JLabel();
+        squareLabel49 = new javax.swing.JLabel();
+        squareLabel50 = new javax.swing.JLabel();
+        squareLabel51 = new javax.swing.JLabel();
+        squareLabel52 = new javax.swing.JLabel();
+        squareLabel53 = new javax.swing.JLabel();
+        squareLabel54 = new javax.swing.JLabel();
+        squareLabel55 = new javax.swing.JLabel();
+        squareLabel56 = new javax.swing.JLabel();
+        squareLabel57 = new javax.swing.JLabel();
+        squareLabel58 = new javax.swing.JLabel();
+        squareLabel59 = new javax.swing.JLabel();
+        squareLabel60 = new javax.swing.JLabel();
+        squareLabel61 = new javax.swing.JLabel();
+        squareLabel62 = new javax.swing.JLabel();
+        squareLabel63 = new javax.swing.JLabel();
+        squareLabel64 = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+
+        gamePanel.setPreferredSize(new java.awt.Dimension(480, 480));
+        gamePanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                gamePanelMouseClicked(evt);
+            }
+        });
+        gamePanel.setLayout(new java.awt.GridLayout(8, 8));
+
+        squareLabel1.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel1.setOpaque(true);
+        squareLabel1.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel1);
+
+        squareLabel2.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
+        squareLabel2.setName("black"); // NOI18N
+        squareLabel2.setOpaque(true);
+        gamePanel.add(squareLabel2);
+
+        squareLabel3.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel3.setOpaque(true);
+        squareLabel3.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel3);
+
+        squareLabel4.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
+        squareLabel4.setName("black"); // NOI18N
+        squareLabel4.setOpaque(true);
+        gamePanel.add(squareLabel4);
+
+        squareLabel5.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel5.setOpaque(true);
+        squareLabel5.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel5);
+
+        squareLabel6.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
+        squareLabel6.setName("black"); // NOI18N
+        squareLabel6.setOpaque(true);
+        gamePanel.add(squareLabel6);
+
+        squareLabel7.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel7.setOpaque(true);
+        squareLabel7.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel7);
+
+        squareLabel8.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
+        squareLabel8.setName("black"); // NOI18N
+        squareLabel8.setOpaque(true);
+        gamePanel.add(squareLabel8);
+
+        squareLabel9.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
+        squareLabel9.setName("black"); // NOI18N
+        squareLabel9.setOpaque(true);
+        gamePanel.add(squareLabel9);
+
+        squareLabel10.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel10.setOpaque(true);
+        squareLabel10.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel10);
+
+        squareLabel11.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
+        squareLabel11.setName("black"); // NOI18N
+        squareLabel11.setOpaque(true);
+        gamePanel.add(squareLabel11);
+
+        squareLabel12.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel12.setOpaque(true);
+        squareLabel12.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel12);
+
+        squareLabel13.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel13.setOpaque(true);
+        squareLabel13.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel13);
+
+        squareLabel14.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel14.setOpaque(true);
+        squareLabel14.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel14);
+
+        squareLabel15.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
+        squareLabel15.setName("black"); // NOI18N
+        squareLabel15.setOpaque(true);
+        gamePanel.add(squareLabel15);
+
+        squareLabel16.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel16.setOpaque(true);
+        squareLabel16.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel16);
+
+        squareLabel17.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel17.setOpaque(true);
+        squareLabel17.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel17);
+
+        squareLabel18.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
+        squareLabel18.setName("black"); // NOI18N
+        squareLabel18.setOpaque(true);
+        gamePanel.add(squareLabel18);
+
+        squareLabel19.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel19.setOpaque(true);
+        squareLabel19.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel19);
+
+        squareLabel20.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/blackKing.png"))); // NOI18N
+        squareLabel20.setName("blackKing"); // NOI18N
+        squareLabel20.setOpaque(true);
+        gamePanel.add(squareLabel20);
+
+        squareLabel21.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel21.setOpaque(true);
+        squareLabel21.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel21);
+
+        squareLabel22.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
+        squareLabel22.setName("black"); // NOI18N
+        squareLabel22.setOpaque(true);
+        gamePanel.add(squareLabel22);
+
+        squareLabel23.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel23.setOpaque(true);
+        squareLabel23.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel23);
+
+        squareLabel24.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel24.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
+        squareLabel24.setName("black"); // NOI18N
+        squareLabel24.setOpaque(true);
+        gamePanel.add(squareLabel24);
+
+        squareLabel25.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel25.setOpaque(true);
+        squareLabel25.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel25);
+
+        squareLabel26.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel26.setOpaque(true);
+        squareLabel26.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel26);
+
+        squareLabel27.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel27.setOpaque(true);
+        squareLabel27.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel27);
+
+        squareLabel28.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel28.setOpaque(true);
+        squareLabel28.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel28);
+
+        squareLabel29.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel29.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
+        squareLabel29.setName("black"); // NOI18N
+        squareLabel29.setOpaque(true);
+        squareLabel29.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel29);
+
+        squareLabel30.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel30.setOpaque(true);
+        squareLabel30.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel30);
+
+        squareLabel31.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel31.setOpaque(true);
+        squareLabel31.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel31);
+
+        squareLabel32.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel32.setOpaque(true);
+        squareLabel32.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel32);
+
+        squareLabel33.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel33.setOpaque(true);
+        squareLabel33.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel33);
+
+        squareLabel34.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel34.setOpaque(true);
+        squareLabel34.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel34);
+
+        squareLabel35.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel35.setOpaque(true);
+        squareLabel35.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel35);
+
+        squareLabel36.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel36.setOpaque(true);
+        squareLabel36.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel36);
+
+        squareLabel37.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel37.setOpaque(true);
+        squareLabel37.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel37);
+
+        squareLabel38.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel38.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
+        squareLabel38.setName("red"); // NOI18N
+        squareLabel38.setOpaque(true);
+        squareLabel38.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel38);
+
+        squareLabel39.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel39.setOpaque(true);
+        squareLabel39.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel39);
+
+        squareLabel40.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel40.setOpaque(true);
+        squareLabel40.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel40);
+
+        squareLabel41.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel41.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
+        squareLabel41.setName("red"); // NOI18N
+        squareLabel41.setOpaque(true);
+        gamePanel.add(squareLabel41);
+
+        squareLabel42.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel42.setOpaque(true);
+        squareLabel42.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel42);
+
+        squareLabel43.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel43.setOpaque(true);
+        gamePanel.add(squareLabel43);
+
+        squareLabel44.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel44.setOpaque(true);
+        squareLabel44.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel44);
+
+        squareLabel45.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel45.setOpaque(true);
+        gamePanel.add(squareLabel45);
+
+        squareLabel46.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel46.setOpaque(true);
+        squareLabel46.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel46);
+
+        squareLabel47.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel47.setOpaque(true);
+        gamePanel.add(squareLabel47);
+
+        squareLabel48.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel48.setOpaque(true);
+        squareLabel48.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel48);
+
+        squareLabel49.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel49.setOpaque(true);
+        squareLabel49.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel49);
+
+        squareLabel50.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel50.setOpaque(true);
+        squareLabel50.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel50);
+
+        squareLabel51.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel51.setOpaque(true);
+        squareLabel51.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel51);
+
+        squareLabel52.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel52.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
+        squareLabel52.setName("red"); // NOI18N
+        squareLabel52.setOpaque(true);
+        gamePanel.add(squareLabel52);
+
+        squareLabel53.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel53.setOpaque(true);
+        squareLabel53.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel53);
+
+        squareLabel54.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel54.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
+        squareLabel54.setName("red"); // NOI18N
+        squareLabel54.setOpaque(true);
+        gamePanel.add(squareLabel54);
+
+        squareLabel55.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel55.setOpaque(true);
+        squareLabel55.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel55);
+
+        squareLabel56.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel56.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
+        squareLabel56.setName("red"); // NOI18N
+        squareLabel56.setOpaque(true);
+        gamePanel.add(squareLabel56);
+
+        squareLabel57.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel57.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
+        squareLabel57.setName("red"); // NOI18N
+        squareLabel57.setOpaque(true);
+        gamePanel.add(squareLabel57);
+
+        squareLabel58.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel58.setOpaque(true);
+        squareLabel58.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel58);
+
+        squareLabel59.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel59.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
+        squareLabel59.setName("red"); // NOI18N
+        squareLabel59.setOpaque(true);
+        gamePanel.add(squareLabel59);
+
+        squareLabel60.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel60.setOpaque(true);
+        squareLabel60.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel60);
+
+        squareLabel61.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel61.setOpaque(true);
+        gamePanel.add(squareLabel61);
+
+        squareLabel62.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel62.setOpaque(true);
+        squareLabel62.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel62);
+
+        squareLabel63.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel63.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
+        squareLabel63.setName("red"); // NOI18N
+        squareLabel63.setOpaque(true);
+        gamePanel.add(squareLabel63);
+
+        squareLabel64.setBackground(new java.awt.Color(115, 55, 10));
+        squareLabel64.setOpaque(true);
+        squareLabel64.setPreferredSize(new java.awt.Dimension(60, 60));
+        gamePanel.add(squareLabel64);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 261, Short.MAX_VALUE)
+            .addComponent(gamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 270, Short.MAX_VALUE)
+            .addComponent(gamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void gamePanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanelMouseClicked
+        final int SQUARE_SIZE = 60;
+        int row = evt.getY() / SQUARE_SIZE;
+        int col = evt.getX() / SQUARE_SIZE;
+        Piece selectedPiece = board[row][col];
+        
+        // Check if the square is empty
+        if (board[row][col] == null){
+            System.out.println("You clicked the an empty square!");
+        } else {
+            System.out.println("You clicked the a " + board[row][col].color + " piece!");
+            int[][] moves = selectedPiece.getValidMoves(board);
+        }
+        System.out.println("--------------------------");
+        
+//        try{
+//            if (squares[row][col].getName().equals("black") || squares[row][col].getName().equals("red") ){
+//            System.out.println("You clicked the a " + squares[row][col].getName() + " piece!");
+//        }
+//        } catch (NullPointerException emptySquare){
+//            System.out.println("You clicked the an empty square!");
+//        }
+        
+    }//GEN-LAST:event_gamePanelMouseClicked
 
     /**
      * @param args the command line arguments
@@ -69,5 +542,70 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel gamePanel;
+    private javax.swing.JLabel squareLabel1;
+    private javax.swing.JLabel squareLabel10;
+    private javax.swing.JLabel squareLabel11;
+    private javax.swing.JLabel squareLabel12;
+    private javax.swing.JLabel squareLabel13;
+    private javax.swing.JLabel squareLabel14;
+    private javax.swing.JLabel squareLabel15;
+    private javax.swing.JLabel squareLabel16;
+    private javax.swing.JLabel squareLabel17;
+    private javax.swing.JLabel squareLabel18;
+    private javax.swing.JLabel squareLabel19;
+    private javax.swing.JLabel squareLabel2;
+    private javax.swing.JLabel squareLabel20;
+    private javax.swing.JLabel squareLabel21;
+    private javax.swing.JLabel squareLabel22;
+    private javax.swing.JLabel squareLabel23;
+    private javax.swing.JLabel squareLabel24;
+    private javax.swing.JLabel squareLabel25;
+    private javax.swing.JLabel squareLabel26;
+    private javax.swing.JLabel squareLabel27;
+    private javax.swing.JLabel squareLabel28;
+    private javax.swing.JLabel squareLabel29;
+    private javax.swing.JLabel squareLabel3;
+    private javax.swing.JLabel squareLabel30;
+    private javax.swing.JLabel squareLabel31;
+    private javax.swing.JLabel squareLabel32;
+    private javax.swing.JLabel squareLabel33;
+    private javax.swing.JLabel squareLabel34;
+    private javax.swing.JLabel squareLabel35;
+    private javax.swing.JLabel squareLabel36;
+    private javax.swing.JLabel squareLabel37;
+    private javax.swing.JLabel squareLabel38;
+    private javax.swing.JLabel squareLabel39;
+    private javax.swing.JLabel squareLabel4;
+    private javax.swing.JLabel squareLabel40;
+    private javax.swing.JLabel squareLabel41;
+    private javax.swing.JLabel squareLabel42;
+    private javax.swing.JLabel squareLabel43;
+    private javax.swing.JLabel squareLabel44;
+    private javax.swing.JLabel squareLabel45;
+    private javax.swing.JLabel squareLabel46;
+    private javax.swing.JLabel squareLabel47;
+    private javax.swing.JLabel squareLabel48;
+    private javax.swing.JLabel squareLabel49;
+    private javax.swing.JLabel squareLabel5;
+    private javax.swing.JLabel squareLabel50;
+    private javax.swing.JLabel squareLabel51;
+    private javax.swing.JLabel squareLabel52;
+    private javax.swing.JLabel squareLabel53;
+    private javax.swing.JLabel squareLabel54;
+    private javax.swing.JLabel squareLabel55;
+    private javax.swing.JLabel squareLabel56;
+    private javax.swing.JLabel squareLabel57;
+    private javax.swing.JLabel squareLabel58;
+    private javax.swing.JLabel squareLabel59;
+    private javax.swing.JLabel squareLabel6;
+    private javax.swing.JLabel squareLabel60;
+    private javax.swing.JLabel squareLabel61;
+    private javax.swing.JLabel squareLabel62;
+    private javax.swing.JLabel squareLabel63;
+    private javax.swing.JLabel squareLabel64;
+    private javax.swing.JLabel squareLabel7;
+    private javax.swing.JLabel squareLabel8;
+    private javax.swing.JLabel squareLabel9;
     // End of variables declaration//GEN-END:variables
 }
