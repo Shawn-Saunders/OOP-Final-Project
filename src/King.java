@@ -41,22 +41,22 @@ public class King extends Piece {
         }
         
         // Check if the move is valid, if it is then add it to the array
-        int[] forwardLeftResult = isMoveValid(board, forward, left);
+        int[] forwardLeftResult = checkCandidateSquares(board, forward, left);
         if (forwardLeftResult != null){
             validMoves.add(forwardLeftResult);
             System.out.println("Forward Left move is valid");
         }
-        int[] forwardRightResult = isMoveValid(board, forward, right);
+        int[] forwardRightResult = checkCandidateSquares(board, forward, right);
         if (forwardRightResult != null){
             validMoves.add(forwardRightResult);
             System.out.println("Forward Right move is valid");
         }
-        int[] backwardLeftResult = isMoveValid(board, backward, left);
+        int[] backwardLeftResult = checkCandidateSquares(board, backward, left);
         if (backwardLeftResult != null){
             validMoves.add(backwardLeftResult);
             System.out.println("Backward Left move is valid");
         }
-        int[] backwardRightResult = isMoveValid(board, backward, right);
+        int[] backwardRightResult = checkCandidateSquares(board, backward, right);
         if (backwardRightResult != null){
             validMoves.add(backwardRightResult);
             System.out.println("Backward Right move is valid");
@@ -64,7 +64,12 @@ public class King extends Piece {
         
         
         // If there is an opponent, calculate jump
-
+        List<List<Jump>> jumpPaths = findJumpSequences(board, this.row, this.col, true, this.color);
+        
+        if (!jumpPaths.isEmpty()){
+            // a jump exists, extract the landing squares from jumpPaths
+            IO.print("Jump Found!");
+        }
         // After the number of moves is determined, we can send the moves back
         // as a new int[][] like origonally planned
         return validMoves.toArray(new int[0][]);

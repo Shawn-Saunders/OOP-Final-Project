@@ -44,12 +44,12 @@ public class Regular extends Piece {
         
         
         // Check if the move is valid, if it is then add it to the array
-        int[] leftResult = isMoveValid(board, forward, left);
+        int[] leftResult = checkCandidateSquares(board, forward, left);
         if (leftResult != null){
             validMoves.add(leftResult);
             System.out.println("Left move is valid");
         }
-        int[] rightResult = isMoveValid(board, forward, right);
+        int[] rightResult = checkCandidateSquares(board, forward, right);
         if (rightResult != null){
             validMoves.add(rightResult);
             System.out.println("Right move is valid");
