@@ -32,6 +32,8 @@ public class Regular extends Piece {
         // because we dont know how many moves there will be
         List<int[]> validMoves = new ArrayList<>();
         int forward = 0;
+        int left = -1;
+        int right = 1;
         
         //Determine forward direction based on piece color
         if (this.color.equals("black")){
@@ -40,17 +42,14 @@ public class Regular extends Piece {
             forward = -1;
         }
         
-        // Define the forward diagonals
-        int[] forwardLeft = {this.row + forward, this.col - 1};
-        int[] forwardRight = {this.row + forward, this.col + 1};
         
         // Check if the move is valid, if it is then add it to the array
-        int[] leftResult = isMoveValid(board, forwardLeft[0], forwardLeft[1]);
+        int[] leftResult = isMoveValid(board, forward, left);
         if (leftResult != null){
             validMoves.add(leftResult);
             System.out.println("Left move is valid");
         }
-        int[] rightResult = isMoveValid(board, forwardRight[0], forwardRight[1]);
+        int[] rightResult = isMoveValid(board, forward, right);
         if (rightResult != null){
             validMoves.add(rightResult);
             System.out.println("Right move is valid");

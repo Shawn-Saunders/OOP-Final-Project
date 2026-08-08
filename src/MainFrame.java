@@ -18,8 +18,7 @@ public class MainFrame extends javax.swing.JFrame {
     // Create an array to hold all the piece locations on the board
     Piece[][] board = new Piece[8][8];
     
-    public final int MIN = 0;
-    public final int MAX = 8;
+    public final int BOARD_WIDTH = 8;
     
     /**
      * Creates new form MainFrame
@@ -29,15 +28,15 @@ public class MainFrame extends javax.swing.JFrame {
         
         // Declare variables
         int index = 0;
-        int row = MIN;
-        int col = MIN;
+        int row;
+        int col;
         
         // Create objects for all red and black pieces
         for(Component square : gamePanel.getComponents())
         {
             JLabel piece = (JLabel) square;
-            row = index / MAX;
-            col = index % MAX;
+            row = index / BOARD_WIDTH;
+            col = index % BOARD_WIDTH;
             squareLabels[row][col] = piece;
             index++;
             if("black".equals(piece.getName()))
@@ -206,8 +205,8 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel12);
 
         squareLabel13.setBackground(new java.awt.Color(50, 20, 5));
-        squareLabel13.setName(""); // NOI18N
         squareLabel13.setOpaque(true);
+        squareLabel13.setPreferredSize(new java.awt.Dimension(60, 60));
         gamePanel.add(squareLabel13);
 
         squareLabel14.setBackground(new java.awt.Color(115, 55, 10));
@@ -400,8 +399,8 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel49);
 
         squareLabel50.setBackground(new java.awt.Color(50, 20, 5));
-        squareLabel50.setName(""); // NOI18N
         squareLabel50.setOpaque(true);
+        squareLabel50.setPreferredSize(new java.awt.Dimension(60, 60));
         gamePanel.add(squareLabel50);
 
         squareLabel51.setBackground(new java.awt.Color(115, 55, 10));
@@ -503,10 +502,10 @@ public class MainFrame extends javax.swing.JFrame {
         Piece selectedPiece = board[row][col];
         
         // Check if the square is empty
-        if (squareLabels[row][col].getName() == null){
+        if (board[row][col] == null){
             System.out.println("You clicked the an empty square!");
         } else {
-            System.out.println("You clicked the a " + squareLabels[row][col].getName() + " piece!");
+            System.out.println("You clicked the a " + board[row][col].color + " piece!");
             int[][] moves = selectedPiece.getValidMoves(board);
         }
         

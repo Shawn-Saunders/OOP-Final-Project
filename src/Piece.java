@@ -19,12 +19,18 @@ public abstract class Piece {
     /**
      * Used to check if a piece can move to a potential square
      * @param board The current board, holding where every piece is currently
-     * @param candidateRow The potential row the piece may go to
-     * @param candidateCol The potential column the piece may go to
+     * @param rowOffset The vertical direction the piece may go to
+     * @param colOffset The horizontal direction the piece may go to
      * @return If there is a valid move, return the row and column that is valid
      */
-    public int[] isMoveValid(Piece[][] board, int candidateRow, int candidateCol) {
+    public int[] isMoveValid(Piece[][] board, int rowOffset, int colOffset) {
+        // Declair variables
         int[] validSquare = null;
+        int candidateRow = this.row + rowOffset;
+        int candidateCol = this.col + colOffset;
+        // Jump twice as far as the offset
+        int jumpRow = this.row + (2 * rowOffset);
+        int jumpCol = this.col + (2 * colOffset);
         
         // check if the movement is in bounds
         if (candidateRow >= MIN && candidateRow <= MAX && candidateCol >= MIN && candidateCol <= MAX){
