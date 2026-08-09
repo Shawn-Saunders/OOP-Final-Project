@@ -504,6 +504,10 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void gamePanelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanelMousePressed
+        // Checks if somebody has already won and in that case ignores any further clicks.
+        if (gameOver) {
+            return;
+        }
         final int SQUARE_SIZE = 60;
         int row = evt.getY() / SQUARE_SIZE;
         int col = evt.getX() / SQUARE_SIZE;
@@ -536,6 +540,7 @@ public class MainFrame extends javax.swing.JFrame {
                 selectedPiece = null;
                 validMoves = null;
                 switchTurn();
+                checkForGameOver();
             } else if (clickedPiece != null && clickedPiece.color.equals(currentTurn)) {
                 // Clicked a different piece of their own, switch the selection to it
                 selectedPiece = clickedPiece;
@@ -694,6 +699,28 @@ public class MainFrame extends javax.swing.JFrame {
             }
         }
         return false;
+    }
+    private void checkForGameOver() {
+        // The player whose turn it is can still make moves and the game continues.
+        if (hasLegalMoves(currentTurn)) {
+            return;   
+        }
+        gameOver = true;
+        String loser = currentTurn;
+        String winner = loser.equals("black") ? "red" : "black";
+        // Checks the reason player lost and prints a message accordingly.
+        String reason;
+        if (countPieces(loser) == 0) {
+            reason = "All of " + loser + "'s pieces have been captured.";
+        } else {
+            reason = "The " + loser + " pieces have no legal moves left.";
+        }
+
+        String message = winner.toUpperCase() + " WINS!\n\n" + reason;
+        System.out.println(message);
+        JOptionPane.showMessageDialog(this, message, "Game Over",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel gamePanel;
