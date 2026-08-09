@@ -117,6 +117,7 @@ public abstract class Piece {
                     allPaths.add(newPath);
                 } else {
                     // if there are more paths then note where the piece lands, the path it took, then return the combined list of Jumps
+                    // Note: The piece cannot return to its original position in the rare event of a diamond currently
                     for (List<Jump> path : furtherPaths) {
                         List<Jump> combined = new ArrayList<>();
                         combined.addAll(path);

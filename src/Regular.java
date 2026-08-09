@@ -31,11 +31,14 @@ public class Regular extends Piece {
         // Create an empty list of validMoves using List and ArrayList
         // because we dont know how many moves there will be
         List<int[]> validMoves = new ArrayList<>();
-//        
+
+        // get the direactions a regular piece can move
         int[][] directions = getDirections(false, this.color);
         for (int[] direction : directions) {
+            // check each direction to see if the piece can move there normally
             int[] result = checkCandidateSquares(board, direction[0], direction[1]);
             if (result != null) {
+                // if the square is available then add it to the list of valid moves
                 validMoves.add(result);
                 System.out.println("Simple move valid: lands at (" + result[0] + "," + result[1] + ")");
             }

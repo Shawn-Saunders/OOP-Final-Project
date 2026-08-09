@@ -27,13 +27,15 @@ public class King extends Piece {
         // because we dont know how many moves there will be
         List<int[]> validMoves = new ArrayList<>();
         
+        // Get the directions a king piece can move
         int[][] directions = getDirections(true, this.color);
         for (int[] direction : directions) {
+            // check each direction to see if the piece can move there normally
             int[] result = checkCandidateSquares(board, direction[0], direction[1]);
             if (result != null) {
+                // if the square is available then add it to the list of valid moves
                 validMoves.add(result);
                 System.out.println("Simple move valid: lands at (" + result[0] + "," + result[1] + ")");
-
             }
         }
         
