@@ -31,32 +31,28 @@ public class Regular extends Piece {
         // Create an empty list of validMoves using List and ArrayList
         // because we dont know how many moves there will be
         List<int[]> validMoves = new ArrayList<>();
-        int forward = 0;
-        int left = -1;
-        int right = 1;
-        
-        //Determine forward direction based on piece color
-        if (this.color.equals("black")){
-            forward = 1;
-        } else if (this.color.equals("red")){
-            forward = -1;
-        }
-        
-        
-        // Check if the move is valid, if it is then add it to the array
-        int[] leftResult = checkCandidateSquares(board, forward, left);
-        if (leftResult != null){
-            validMoves.add(leftResult);
-            System.out.println("Left move is valid");
-        }
-        int[] rightResult = checkCandidateSquares(board, forward, right);
-        if (rightResult != null){
-            validMoves.add(rightResult);
-            System.out.println("Right move is valid");
+//        
+        int[][] directions = getDirections(false, this.color);
+        for (int[] direction : directions) {
+            int[] result = checkCandidateSquares(board, direction[0], direction[1]);
+            if (result != null) {
+                validMoves.add(result);
+                System.out.println("Simple move valid: lands at (" + result[0] + "," + result[1] + ")");
+            }
         }
         
         // If there is an opponent, calculate jump
-
+        List<List<Jump>> jumpPaths = findJumpSequences(board, this.row, this.col, false, this.color, new ArrayList<>());
+                
+        if (!jumpPaths.isEmpty()){
+            // a jump exists, extract the landing squares from jumpPaths
+            for (List<Jump> path : jumpPaths) {
+                Jump lastJump = path.get(path.size() -1);
+                validMoves.add(lastJump.landsAt);
+            }
+        }
+        
+        System.out.println(debugMessage(jumpPaths));
         // After the number of moves is determined, we can send the moves back
         // as a new int[][] like origonally planned
         return validMoves.toArray(new int[0][]);

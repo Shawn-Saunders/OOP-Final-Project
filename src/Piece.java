@@ -85,53 +85,40 @@ public abstract class Piece {
      * @param col The column the current piece is on
      * @param isKing check if the current piece is a king
      * @param color The color of the current piece
+     * @param pathSoFar The path the current piece may have traveled so far
      * @return a compiled list of all possible paths a piece can go
      * tracking the path number, and the landing coordinate
      */
-    public List<List<Jump>> findJumpSequences(Piece[][] board, int row, int col, boolean isKing, String color){
+    public List<List<Jump>> findJumpSequences(Piece[][] board, int row, int col, boolean isKing, String color, List<Jump> pathSoFar){
         // Create the list of lists
         List<List<Jump>> allPaths = new ArrayList<>();
         
-        int[][] directions;
-        
         // Determine which diretion offset needs to be used
-        if (isKing) {
-            // able to move all directions
-            directions = new int[][] {{1,1},{-1,-1},{1,-1},{-1,1}};
-        } else if (color.equals("black")){
-            // black moves down, which is positive in the array
-            directions = new int[][] {{1,-1},{1,1}};
-        } else {
-            // red moves up, which is negative values
-            directions = new int[][] {{-1,1},{-1,-1}}; 
-        }
+        int[][] directions = getDirections(isKing, color);
         
         for (int[] direction : directions){
             // for each direction check if a jump is possible, then create a new jump
             Jump jump = checkForJump(board, row, col, direction[0], direction[1], color);
             
-            // Check if there is a jump
-            if (jump != null) {
+            // Check if there is a possible jump and that the piece has not already been captured
+            if (jump != null && !alreadyCaptured(pathSoFar, jump)) {
                 // If the piece reaches the back rank, make the piece a king
-                boolean nowKing = false;
+                boolean nowKing = isKing || jump.landsAt[0] == 0 || jump.landsAt[0] == MAX;
                 
-                if (jump.landsAt[0] == 0 || jump.landsAt[0] == MAX) {
-                    nowKing = true;
-                }
+                System.out.println("At (" + row + "," + col + ") -> landing (" + jump.landsAt[0] + "," + jump.landsAt[1] + "), isKing was " + isKing + ", nowKing = " + nowKing);
                 
+                List<Jump> newPath = new ArrayList<>(pathSoFar);
+                newPath.add(jump);
                 // Make a list of lists to recursively search for new moves
-                List<List<Jump>> furtherPaths = findJumpSequences(board, jump.landsAt[0], jump.landsAt[1], nowKing, color);
+                List<List<Jump>> furtherPaths = findJumpSequences(board, jump.landsAt[0], jump.landsAt[1], nowKing, color, newPath);
                 
-                // If there are no further paths then return a single jump sequence
+                // If there are no further paths then return the current Jump
                 if (furtherPaths.isEmpty()){
-                    List<Jump> singlePath = new ArrayList<>();
-                    singlePath.add(jump);
-                    allPaths.add(singlePath);
+                    allPaths.add(newPath);
                 } else {
-                    // if there are more paths then note where the piece lands, the path it took, then return the combined list
+                    // if there are more paths then note where the piece lands, the path it took, then return the combined list of Jumps
                     for (List<Jump> path : furtherPaths) {
                         List<Jump> combined = new ArrayList<>();
-                        combined.add(jump);
                         combined.addAll(path);
                         allPaths.add(combined);
                     }
@@ -140,6 +127,52 @@ public abstract class Piece {
         }
         
         return allPaths;
+    }
+    
+    /**
+     * Check if the square has already been "captured"
+     * @param path The last Jump performed by the piece
+     * @param candidate The next possible Jump for the piece
+     * @return 
+     */
+    private boolean alreadyCaptured(List<Jump> path, Jump candidate) {
+        for (Jump takenJump : path) {
+            if (takenJump.captures[0] == candidate.captures[0] && takenJump.captures[1] == candidate.captures[1]) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public int[][] getDirections(boolean isKing, String color) {
+        if (isKing) {
+            // able to move all directions
+            return new int[][] {{1,1},{-1,-1},{1,-1},{-1,1}};
+        } else if (color.equals("black")){
+            // black moves down, which is positive in the array
+            return new int[][] {{1,-1},{1,1}};
+        } else {
+            // red moves up, which is negative values
+            return new int[][] {{-1,1},{-1,-1}}; 
+        }
+    }
+    
+    /**
+     * Simple debugging message to check how many jumps are possible for a selected piece
+     * @param jumpPaths The path the piece had gone down, holding both the location of
+     * the captured piece and where the current piece is traveling
+     * @return the debug message populated with the information
+     */
+    public String debugMessage (List<List<Jump>> jumpPaths) {
+        String message = "";
+        for (List<Jump> path : jumpPaths) {
+            message += "Jump path found, length " + path.size() + ":\n";
+            for (Jump j : path) {
+                message += "captures (" + j.captures[0] + "," + j.captures[1] +
+                        ") lands at (" + j.landsAt[0] + "," + j.landsAt[1] + ")\n";
+            }
+        }
+        return message;
     }
     
     abstract int[][] getValidMoves(Piece[][] board);
