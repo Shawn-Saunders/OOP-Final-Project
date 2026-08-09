@@ -20,6 +20,8 @@ public abstract class Piece {
     String color;
     int row;
     int col;
+    boolean isKing;
+    
     
     /**
      * Used to check if a piece can move to a potential square
@@ -90,12 +92,16 @@ public abstract class Piece {
      * tracking the path number, and the landing coordinate
      */
     public List<List<Jump>> findJumpSequences(Piece[][] board, int row, int col, boolean isKing, String color, List<Jump> pathSoFar){
+        
         // Create the list of lists
         List<List<Jump>> allPaths = new ArrayList<>();
         
         // Determine which diretion offset needs to be used
         int[][] directions = getDirections(isKing, color);
         
+        boolean nowKing = isKing;
+        
+        // loop limited by isKing before iteration, nowKing will not affect it
         for (int[] direction : directions){
             // for each direction check if a jump is possible, then create a new jump
             Jump jump = checkForJump(board, row, col, direction[0], direction[1], color);
@@ -103,9 +109,10 @@ public abstract class Piece {
             // Check if there is a possible jump and that the piece has not already been captured
             if (jump != null && !alreadyCaptured(pathSoFar, jump)) {
                 // If the piece reaches the back rank, make the piece a king
-                boolean nowKing = isKing || jump.landsAt[0] == 0 || jump.landsAt[0] == MAX;
-                
-                System.out.println("At (" + row + "," + col + ") -> landing (" + jump.landsAt[0] + "," + jump.landsAt[1] + "), isKing was " + isKing + ", nowKing = " + nowKing);
+                if (jump.landsAt[0] == 0 || jump.landsAt[0] == MAX) {
+                    nowKing = true;
+                }
+                // System.out.println("At (" + row + "," + col + ") -> landing (" + jump.landsAt[0] + "," + jump.landsAt[1] + "), isKing was " + isKing + ", nowKing = " + nowKing);
                 
                 List<Jump> newPath = new ArrayList<>(pathSoFar);
                 newPath.add(jump);
@@ -120,12 +127,14 @@ public abstract class Piece {
                     // Note: The piece cannot return to its original position in the rare event of a diamond currently
                     for (List<Jump> path : furtherPaths) {
                         List<Jump> combined = new ArrayList<>();
+                        // combine the paths then add the combined paths to return all possible paths
                         combined.addAll(path);
                         allPaths.add(combined);
                     }
                 }
             }
         }
+        
         
         return allPaths;
     }
@@ -157,6 +166,33 @@ public abstract class Piece {
             return new int[][] {{-1,1},{-1,-1}}; 
         }
     }
+    
+    public int[][] getCapturesFor(Piece[][] board, int destRow, int destCol) {
+        List<int[]> captured = new ArrayList<>();
+        List<List<Jump>> paths = findJumpSequences(board, this.row, this.col, this.isKing, this.color, new ArrayList<>());
+        List<Jump> best = null;
+        
+        // Find the jump path that finishes on the square we were asked about
+        for (List<Jump> path : paths) {
+            int[] end = path.get(path.size() - 1).landsAt;
+            if (end[0] == destRow && end[1] == destCol) {
+                // If two paths finish on the same square, take the one that captures more
+                if (best == null || path.size() > best.size()) {
+                    best = path;
+                }
+            }
+        }
+        
+        // Collect every square that path captured on the way
+        if (best != null) {
+            for (Jump jump : best) {
+                captured.add(jump.captures);
+            }
+        }
+        
+        return captured.toArray(new int[0][]);
+    }
+
     
     /**
      * Simple debugging message to check how many jumps are possible for a selected piece

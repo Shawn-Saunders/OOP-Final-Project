@@ -15,10 +15,11 @@ public class King extends Piece {
     /**
      * Constructor - Create King piece objects
      */
-    King(String color, int row, int col) {
+    King(String color, int row, int col, boolean isKing) {
         this.color = color;
         this.row = row;
         this.col = col;
+        this.isKing = isKing;
     }
     
     @Override
@@ -28,7 +29,7 @@ public class King extends Piece {
         List<int[]> validMoves = new ArrayList<>();
         
         // Get the directions a king piece can move
-        int[][] directions = getDirections(true, this.color);
+        int[][] directions = getDirections(this.isKing, this.color);
         for (int[] direction : directions) {
             // check each direction to see if the piece can move there normally
             int[] result = checkCandidateSquares(board, direction[0], direction[1]);
@@ -41,7 +42,7 @@ public class King extends Piece {
         
         
         // If there is an opponent, calculate jump
-        List<List<Jump>> jumpPaths = findJumpSequences(board, this.row, this.col, true, this.color, new ArrayList<>());
+        List<List<Jump>> jumpPaths = findJumpSequences(board, this.row, this.col, this.isKing, this.color, new ArrayList<>());
         
         if (!jumpPaths.isEmpty()){
             // a jump exists, extract the landing squares from jumpPaths
@@ -51,8 +52,7 @@ public class King extends Piece {
             }
         }
         
-        System.out.println(debugMessage(jumpPaths));
-        
+        // System.out.println(debugMessage(jumpPaths));
         // After the number of moves is determined, we can send the moves back
         // as a new int[][] like origonally planned
         return validMoves.toArray(new int[0][]);
