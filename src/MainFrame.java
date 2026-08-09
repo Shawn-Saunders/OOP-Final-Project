@@ -4,6 +4,7 @@
  */
 import java.awt.Component;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Devin
@@ -27,6 +28,8 @@ public class MainFrame extends javax.swing.JFrame {
     
     // The player who's turn it currently is. Starts with black.
     String currentTurn = "black";
+    // Boolean to see if one of the player has won, is set to true when conditions are met.
+    boolean gameOver = false;
     
     public final int BOARD_WIDTH = 8;
     
@@ -657,7 +660,41 @@ public class MainFrame extends javax.swing.JFrame {
                 new javax.swing.ImageIcon(getClass().getResource("/" + imageName + ".png")));
         squareLabels[newRow][newCol].setName(imageName);
     }
-
+    /**
+     * Counts the number of pieces left of each color on the board.
+     * @param color The color of piece we are counting for.
+     * @return Number of pieces left of the color being checked.
+     */
+    private int countPieces(String color) {
+        int count = 0;
+        for (int row = 0; row < BOARD_WIDTH; row++) {
+            for (int col = 0; col < BOARD_WIDTH; col++) {
+                if (board[row][col] != null && board[row][col].color.equals(color)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    /**
+     * Checks if the player still has any moves that they're allowed to make.
+     * @param color The color of piece we are checking for.
+     * @return true, if any piece of the color being checked has at least one valid move.
+     */
+    private boolean hasLegalMoves(String color) {
+        for (int row = 0; row < BOARD_WIDTH; row++) {
+            for (int col = 0; col < BOARD_WIDTH; col++) {
+                Piece piece = board[row][col];
+                // Only asks specific player's own pieces where they can go
+                if (piece != null && piece.color.equals(color)) {
+                    if (piece.getValidMoves(board).length > 0) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel gamePanel;
     private javax.swing.JLabel squareLabel1;
