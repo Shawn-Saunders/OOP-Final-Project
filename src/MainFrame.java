@@ -523,7 +523,7 @@ public class MainFrame extends javax.swing.JFrame {
                 System.out.println("It is " + currentTurn + "'s turn, so that piece can't move.");
             } else {
                 selectedPiece = clickedPiece;
-                validMoves = selectedPiece.getValidMoves(board);
+                validMoves = movesFor(selectedPiece);
                 System.out.println("Selected the " + selectedPiece.color
                         + " piece at row " + row + ", col " + col);
                 System.out.println("It has " + validMoves.length + " allowed move(s).");
@@ -544,7 +544,7 @@ public class MainFrame extends javax.swing.JFrame {
             } else if (clickedPiece != null && clickedPiece.color.equals(currentTurn)) {
                 // Clicked a different piece of their own, switch the selection to it
                 selectedPiece = clickedPiece;
-                validMoves = selectedPiece.getValidMoves(board);
+                validMoves = movesFor(selectedPiece);
                 System.out.println("Switched to the piece at row " + row + ", col " + col);
                 System.out.println("It has " + validMoves.length + " allowed move(s).");
             } else {
@@ -721,6 +721,42 @@ public class MainFrame extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, message, "Game Over",
                 JOptionPane.INFORMATION_MESSAGE);
     }
+    /**
+     * This checks the most amount of pieces a player could capture for their turn.
+     * @param color The color we are checking.
+     * @return Highest number of captures that are available, 0 if no jumps exist.
+     */
+    private int bestCaptureCount(String color) {
+        int best = 0;
+        for (int row = 0; row < BOARD_WIDTH; row++) {
+            for (int col = 0; col < BOARD_WIDTH; col++) {
+                Piece piece = board[row][col];
+                if (piece != null && piece.color.equals(color)) {
+                    for (int[] move : piece.getValidMoves(board)) {
+                        int captures = piece.getCapturesFor(board, move[0], move[1]).length;
+                        if (captures > best) {
+                            best = captures;
+                        }
+                    }
+                }
+            }
+        }
+        return best;
+    }
+    /**
+     * 
+     * @param piece the piece that the player is trying to move.
+     * @return The square that the player is allowed to move to.
+     */
+    private int[][] movesFor(Piece piece) {
+        int best = bestCaptureCount(piece.color);
+        java.util.List<int[]> allowed = new java.util.ArrayList<>();
+        for (int[] move : piece.getValidMoves(board)) {
+            if (piece.getCapturesFor(board, move[0], move[1]).length == best) {
+                allowed.add(move);
+            }
+        }
+        return allowed.toArray(new int[0][]);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel gamePanel;
