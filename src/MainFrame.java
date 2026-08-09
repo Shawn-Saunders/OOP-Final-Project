@@ -18,6 +18,16 @@ public class MainFrame extends javax.swing.JFrame {
     // Create an array to hold all the piece locations on the board
     Piece[][] board = new Piece[8][8];
     
+    // Remembers which piece the player currently has picked up
+    // null means nothing is selected right now
+    Piece selectedPiece = null;
+    
+    // Allowed squares for the selected piece, null when nothing is selected
+    int[][] validMoves = null; 
+    
+    // The player who's turn it currently is. Starts with black.
+    String currentTurn = "black";
+    
     public final int BOARD_WIDTH = 8;
     
     /**
@@ -40,13 +50,13 @@ public class MainFrame extends javax.swing.JFrame {
             squareLabels[row][col] = piece;
             index++;
             if("black".equals(piece.getName()))
-                board[row][col] = new Regular("black",row,col);
+                board[row][col] = new Regular("black",row,col, false);
             else if ("red".equals(piece.getName()))
-                board[row][col] = new Regular("red",row,col);
+                board[row][col] = new Regular("red",row,col, false);
             else if ("blackKing".equals(piece.getName()))
-                board[row][col] = new King("black",row,col);
+                board[row][col] = new King("black",row,col, true);
             else if ("redKing".equals(piece.getName()))
-                board[row][col] = new King("red",row,col);
+                board[row][col] = new King("red",row,col, true);
         }
         
     }
@@ -132,8 +142,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         gamePanel.setPreferredSize(new java.awt.Dimension(480, 480));
         gamePanel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                gamePanelMouseClicked(evt);
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                gamePanelMousePressed(evt);
             }
         });
         gamePanel.setLayout(new java.awt.GridLayout(8, 8));
@@ -283,7 +293,6 @@ public class MainFrame extends javax.swing.JFrame {
         squareLabel27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
         squareLabel27.setName("red"); // NOI18N
         squareLabel27.setOpaque(true);
-        squareLabel27.setPreferredSize(new java.awt.Dimension(60, 60));
         gamePanel.add(squareLabel27);
 
         squareLabel28.setBackground(new java.awt.Color(115, 55, 10));
@@ -489,30 +498,54 @@ public class MainFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void gamePanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanelMouseClicked
+    private void gamePanelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanelMousePressed
         final int SQUARE_SIZE = 60;
         int row = evt.getY() / SQUARE_SIZE;
         int col = evt.getX() / SQUARE_SIZE;
-        Piece selectedPiece = board[row][col];
+         // Whatever piece is sitting on the square we just clicked
+        // This is null if the square is empty
+        Piece clickedPiece = board[row][col];
         
-        // Check if the square is empty
-        if (selectedPiece == null){
-            System.out.println("You clicked the an empty square!");
+        if (selectedPiece == null) {
+            // First click, the player is trying to pick a piece up
+            if (clickedPiece == null) {
+                System.out.println("Empty square, nothing to pick up.");
+            } else if (!clickedPiece.color.equals(currentTurn)){
+                System.out.println("It is " + currentTurn + "'s turn, so that piece can't move.");
+            } else {
+                selectedPiece = clickedPiece;
+                validMoves = selectedPiece.getValidMoves(board);
+                System.out.println("Selected the " + selectedPiece.color
+                        + " piece at row " + row + ", col " + col);
+                System.out.println("It has " + validMoves.length + " allowed move(s).");
+            }
         } else {
-            System.out.println("You clicked the a " + board[row][col].color + " piece!");
-            int[][] moves = selectedPiece.getValidMoves(board);
+            // The player is already holding a piece
+        if (isValidDestination(row, col)) {
+                // Removes any pieces we jump over
+                for (int[] square : selectedPiece.getCapturesFor(board, row, col)) {
+                    removePiece(square[0], square[1]);
+                }
+                movePiece(selectedPiece, row, col);
+                System.out.println("Moved to row " + row + ", col " + col);
+                selectedPiece = null;
+                validMoves = null;
+                switchTurn();
+            } else if (clickedPiece != null && clickedPiece.color.equals(currentTurn)) {
+                // Clicked a different piece of their own, switch the selection to it
+                selectedPiece = clickedPiece;
+                validMoves = selectedPiece.getValidMoves(board);
+                System.out.println("Switched to the piece at row " + row + ", col " + col);
+                System.out.println("It has " + validMoves.length + " allowed move(s).");
+            } else {
+                System.out.println("Not a legal move, deselecting.");
+                selectedPiece = null;
+                validMoves = null;
+            }
         }
+        
         System.out.println("--------------------------");
-        
-//        try{
-//            if (squares[row][col].getName().equals("black") || squares[row][col].getName().equals("red") ){
-//            System.out.println("You clicked the a " + squares[row][col].getName() + " piece!");
-//        }
-//        } catch (NullPointerException emptySquare){
-//            System.out.println("You clicked the an empty square!");
-//        }
-        
-    }//GEN-LAST:event_gamePanelMouseClicked
+    }//GEN-LAST:event_gamePanelMousePressed
 
     /**
      * @param args the command line arguments
@@ -537,6 +570,90 @@ public class MainFrame extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new MainFrame().setVisible(true));
+    }
+    
+    /**
+     * Switches turns between the players
+     */
+    private void switchTurn() {
+        if (currentTurn.equals("black")) {
+            currentTurn = "red";
+        } else {
+            currentTurn = "black";
+        }
+        System.out.println("It is now " + currentTurn + "'s turn.");
+    }
+    /**
+     * Checks if the destination is a legal move for the selected piece.
+     * @param row The clicked row
+     * @param col The clicked column
+     * @return true if the square is in the validMoves 
+     */
+    private boolean isValidDestination(int row, int col) {
+           if (validMoves == null) {
+               return false;
+           }
+
+           // Compares the array numbers
+           for (int[] move : validMoves) {
+               if (move[0] == row && move[1] == col) {
+                   return true;
+               }
+           }
+           return false;
+       }
+       /**
+     * Figures out which image file belongs to a piece 
+     * @param piece The piece we need the image for
+     * @return "black", "red", "blackKing" or "redKing" 
+     */
+    private String imageNameFor(Piece piece) {
+            if (piece instanceof King) {
+                return piece.color + "King";
+            }
+            return piece.color;
+        } 
+    /**
+     * Remove the captured pieces from the board and the screen.
+     * @param row The row of the piece being removed.
+     * @param col The column of the piece being removed.
+     */
+    private void removePiece(int row, int col) {
+        board[row][col] = null;
+        squareLabels[row][col].setIcon(null);
+        squareLabels[row][col].setName(null);
+    }
+    /**
+     * Moves a piece to a new square and updates the board
+     * @param piece The piece being moved
+     * @param newRow The row it's being moved to
+     * @param newCol The column it's being moved to
+     */
+    private void movePiece(Piece piece, int newRow, int newCol) {
+        // Takes where it came from before we overwrite anything
+        int oldRow = piece.row;
+        int oldCol = piece.col;
+        
+        // Updates the logical board
+        board[oldRow][oldCol] = null;
+        board[newRow][newCol] = piece;
+        
+        // Updates the piece's own idea of where it is
+        piece.row = newRow;
+        piece.col = newCol;
+        
+        // Clears the square it left
+        squareLabels[oldRow][oldCol].setIcon(null);
+        squareLabels[oldRow][oldCol].setName(null);
+        
+        // Draws the piece on the square it arrived at
+        // Shawn: I think this is where the kinging logic should go
+        // if the king lands on rank 0 or rank 7 then change it to instance of king
+        // also if the jump path set nowKing to true, then change the instance to king
+        String imageName = imageNameFor(piece);
+        squareLabels[newRow][newCol].setIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/" + imageName + ".png")));
+        squareLabels[newRow][newCol].setName(imageName);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

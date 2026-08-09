@@ -15,10 +15,11 @@ public class King extends Piece {
     /**
      * Constructor - Create King piece objects
      */
-    King(String color, int row, int col) {
+    King(String color, int row, int col, boolean isKing) {
         this.color = color;
         this.row = row;
         this.col = col;
+        this.isKing = isKing;
     }
     
     @Override
@@ -27,19 +28,19 @@ public class King extends Piece {
         // because we dont know how many moves there will be
         List<int[]> validMoves = new ArrayList<>();
         
-        int[][] directions = getDirections(true, this.color);
+        int[][] directions = getDirections(this.isKing, this.color);
         for (int[] direction : directions) {
             int[] result = checkCandidateSquares(board, direction[0], direction[1]);
             if (result != null) {
                 validMoves.add(result);
-                System.out.println("Simple move valid: lands at (" + result[0] + "," + result[1] + ")");
+                // System.out.println("Simple move valid: lands at (" + result[0] + "," + result[1] + ")");
 
             }
         }
         
         
         // If there is an opponent, calculate jump
-        List<List<Jump>> jumpPaths = findJumpSequences(board, this.row, this.col, true, this.color, new ArrayList<>());
+        List<List<Jump>> jumpPaths = findJumpSequences(board, this.row, this.col, this.isKing, this.color, new ArrayList<>());
         
         if (!jumpPaths.isEmpty()){
             // a jump exists, extract the landing squares from jumpPaths
@@ -49,8 +50,7 @@ public class King extends Piece {
             }
         }
         
-        System.out.println(debugMessage(jumpPaths));
-        
+        // System.out.println(debugMessage(jumpPaths));
         // After the number of moves is determined, we can send the moves back
         // as a new int[][] like origonally planned
         return validMoves.toArray(new int[0][]);
