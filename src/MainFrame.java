@@ -280,6 +280,8 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel26);
 
         squareLabel27.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
+        squareLabel27.setName("red"); // NOI18N
         squareLabel27.setOpaque(true);
         squareLabel27.setPreferredSize(new java.awt.Dimension(60, 60));
         gamePanel.add(squareLabel27);
@@ -293,7 +295,6 @@ public class MainFrame extends javax.swing.JFrame {
         squareLabel29.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
         squareLabel29.setName("black"); // NOI18N
         squareLabel29.setOpaque(true);
-        squareLabel29.setPreferredSize(new java.awt.Dimension(60, 60));
         gamePanel.add(squareLabel29);
 
         squareLabel30.setBackground(new java.awt.Color(115, 55, 10));
@@ -340,7 +341,6 @@ public class MainFrame extends javax.swing.JFrame {
         squareLabel38.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
         squareLabel38.setName("red"); // NOI18N
         squareLabel38.setOpaque(true);
-        squareLabel38.setPreferredSize(new java.awt.Dimension(60, 60));
         gamePanel.add(squareLabel38);
 
         squareLabel39.setBackground(new java.awt.Color(115, 55, 10));
@@ -466,8 +466,6 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel62);
 
         squareLabel63.setBackground(new java.awt.Color(50, 20, 5));
-        squareLabel63.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
-        squareLabel63.setName("red"); // NOI18N
         squareLabel63.setOpaque(true);
         gamePanel.add(squareLabel63);
 
@@ -498,7 +496,7 @@ public class MainFrame extends javax.swing.JFrame {
         Piece selectedPiece = board[row][col];
         
         // Check if the square is empty
-        if (board[row][col] == null){
+        if (selectedPiece == null){
             System.out.println("You clicked the an empty square!");
         } else {
             System.out.println("You clicked the a " + board[row][col].color + " piece!");
