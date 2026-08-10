@@ -298,8 +298,6 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel26);
 
         squareLabel27.setBackground(new java.awt.Color(50, 20, 5));
-        squareLabel27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
-        squareLabel27.setName("red"); // NOI18N
         squareLabel27.setOpaque(true);
         gamePanel.add(squareLabel27);
 
@@ -345,10 +343,7 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel35);
 
         squareLabel36.setBackground(new java.awt.Color(50, 20, 5));
-        squareLabel36.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
-        squareLabel36.setName("red"); // NOI18N
         squareLabel36.setOpaque(true);
-        squareLabel36.setPreferredSize(new java.awt.Dimension(60, 60));
         gamePanel.add(squareLabel36);
 
         squareLabel37.setBackground(new java.awt.Color(115, 55, 10));
@@ -652,14 +647,20 @@ public class MainFrame extends javax.swing.JFrame {
         int oldRow = piece.row;
         int oldCol = piece.col;
         
-        // Updates the logical board
-        board[oldRow][oldCol] = null;
-        board[newRow][newCol] = piece;
-        
         // Promote the piece if it land on the back rank of the opposing side
         if (!(piece instanceof King) && piece.reachedBackRank(newRow)) {
             piece = new King(piece.color, newRow, newCol, KING_MOVEMENT);
         }
+        
+        // Check if the piece has crossed the back rank during a multi-jump
+        if (!(piece instanceof King) && piece.crossedBackRank(board, newRow, newCol)) {
+            piece = new King(piece.color, newRow, newCol, KING_MOVEMENT);
+        }
+        
+        // Updates the logical board
+        board[oldRow][oldCol] = null;
+        board[newRow][newCol] = piece;
+        
         
         // Updates the piece's own idea of where it is
         board[newRow][newCol] = piece;

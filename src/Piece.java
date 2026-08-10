@@ -15,6 +15,8 @@ public abstract class Piece {
     // Constants
     final static int MIN = 0;
     final static int MAX = 7;
+    public final int[][] KING_MOVEMENT = new int[][] {{1,1},{-1,-1},{1,-1},{-1,1}};
+
     
     // Object variables
     String color;
@@ -96,9 +98,9 @@ public abstract class Piece {
         List<List<Jump>> allPaths = new ArrayList<>();
         
         // Determine which diretion offset needs to be used
-        int[][] directions = this.directions;
+        int[][] directions = isKing ? KING_MOVEMENT : this.directions;
         
-
+        boolean nowKing = isKing;
         
         // loop limited by isKing before iteration, nowKing will not affect it
         for (int[] direction : directions){
@@ -106,15 +108,15 @@ public abstract class Piece {
             Jump jump = checkForJump(board, row, col, direction[0], direction[1], color);
             // Check if there is a possible jump and that the piece has not already been captured
             if (jump != null && !alreadyCaptured(pathSoFar, jump)) {
+                // check if the piece would be promoted
+                if (jump.landsAt[0] == MIN || jump.landsAt[0] == MAX){
+                    nowKing = true;
+                }
+                
             List<Jump> newPath = new ArrayList<>(pathSoFar);
             newPath.add(jump);
-
-            if (!isKing && (jump.landsAt[0] == MIN || jump.landsAt[0] == MAX)) {
-                allPaths.add(newPath);
-                continue;
-            }
-           
-            List<List<Jump>> furtherPaths = findJumpSequences(board, jump.landsAt[0], jump.landsAt[1], isKing, color, newPath);
+   
+            List<List<Jump>> furtherPaths = findJumpSequences(board, jump.landsAt[0], jump.landsAt[1], nowKing, color, newPath);
             
             if (furtherPaths.isEmpty()){
                 allPaths.add(newPath);
@@ -169,6 +171,22 @@ public abstract class Piece {
         return captured.toArray(new int[0][]);
     }
 
+    public boolean crossedBackRank(Piece[][] board, int destRow, int destCol) {
+        List<List<Jump>> paths = findJumpSequences(board, row, col, this instanceof King, color, new ArrayList<>());
+        
+        for (List<Jump> path : paths) {
+            int[] end = path.get(path.size() - 1).landsAt;
+            if (end[0] == destRow && end[1] == destCol) {
+                for (Jump jump : path) {
+                    if (jump.landsAt[0] == MIN || jump.landsAt[0] == MAX) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return reachedBackRank(destRow);
+    }
+    
     public boolean reachedBackRank(int row) {
         return (color.equals("black") && row == Piece.MAX) ||
                (color.equals("red") && row == Piece.MIN);
