@@ -260,7 +260,7 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel19);
 
         squareLabel20.setBackground(new java.awt.Color(50, 20, 5));
-        squareLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/blackKing.png"))); // NOI18N
+        squareLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
         squareLabel20.setName("blackKing"); // NOI18N
         squareLabel20.setOpaque(true);
         gamePanel.add(squareLabel20);
@@ -348,7 +348,6 @@ public class MainFrame extends javax.swing.JFrame {
         squareLabel36.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
         squareLabel36.setName("red"); // NOI18N
         squareLabel36.setOpaque(true);
-        squareLabel36.setPreferredSize(new java.awt.Dimension(60, 60));
         gamePanel.add(squareLabel36);
 
         squareLabel37.setBackground(new java.awt.Color(115, 55, 10));

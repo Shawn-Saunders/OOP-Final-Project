@@ -272,7 +272,7 @@
               <Color blue="5" green="14" red="32" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/blackKing.png"/>
+              <Image iconType="3" name="/black.png"/>
             </Property>
             <Property name="name" type="java.lang.String" value="blackKing" noResource="true"/>
             <Property name="opaque" type="boolean" value="true"/>
