@@ -665,6 +665,18 @@ public class MainFrame extends javax.swing.JFrame {
                 new javax.swing.ImageIcon(getClass().getResource("/" + imageName + ".png")));
         squareLabels[newRow][newCol].setName(imageName);
     }
+    
+    /**
+     * Generates a ghost piece where the piece can land
+     * @param piece The last location of a path or the potential squares a piece can go to
+     * @param newRow The row of the possible location
+     * @param newCol The column of the possible location
+     */
+    public void showGhostPiece(Piece piece, int newRow, int newCol) {
+        squareLabels[newRow][newCol].setIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/greyCircle.png")));
+    }
+    
     /**
      * Counts the number of pieces left of each color on the board.
      * @param color The color of piece we are counting for.

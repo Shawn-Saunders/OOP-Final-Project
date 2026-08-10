@@ -56,7 +56,7 @@ public class Regular extends Piece {
             }
         }
         
-        // System.out.println(debugMessage(jumpPaths));
+        System.out.println(debugMessage(jumpPaths));
         // After the number of moves is determined, we can send the moves back
         // as a new int[][] like origonally planned
         return validMoves.toArray(new int[0][]);
