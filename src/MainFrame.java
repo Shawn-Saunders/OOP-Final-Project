@@ -534,10 +534,13 @@ public class MainFrame extends javax.swing.JFrame {
         clearGhostPieces();
         if (isValidDestination(row, col)) {
                 // Removes any pieces we jump over
+                boolean shouldPromote = !(selectedPiece instanceof King)
+                        && selectedPiece.crossedBackRank(board, row, col);
+
                 for (int[] square : selectedPiece.getCapturesFor(board, row, col)) {
                     removePiece(square[0], square[1]);
                 }
-                movePiece(selectedPiece, row, col);
+                movePiece(selectedPiece, row, col, shouldPromote);
                 System.out.println("Moved to row " + row + ", col " + col);
                 selectedPiece = null;
                 validMoves = null;
@@ -642,19 +645,13 @@ public class MainFrame extends javax.swing.JFrame {
      * @param newRow The row it's being moved to
      * @param newCol The column it's being moved to
      */
-    private void movePiece(Piece piece, int newRow, int newCol) {
+    private void movePiece(Piece piece, int newRow, int newCol, boolean shouldPromote) {
         // Takes where it came from before we overwrite anything
         int oldRow = piece.row;
         int oldCol = piece.col;
-        
-        // Promote the piece if it land on the back rank of the opposing side
-        if (!(piece instanceof King) && piece.reachedBackRank(newRow)) {
-            piece = new King(piece.color, newRow, newCol, KING_MOVEMENT);
-        }
-        
-        // Check if the piece has crossed the back rank during a multi-jump
-        if (!(piece instanceof King) && piece.crossedBackRank(board, newRow, newCol)) {
-            piece = new King(piece.color, newRow, newCol, KING_MOVEMENT);
+
+        if (shouldPromote) {
+            piece = new King(piece.color, newRow, newCol, KING_MOVEMENT); 
         }
         
         // Updates the logical board
