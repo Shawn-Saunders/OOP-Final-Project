@@ -223,6 +223,9 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel12);
 
         squareLabel13.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
+        squareLabel13.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
+        squareLabel13.setName("black"); // NOI18N
         squareLabel13.setOpaque(true);
         squareLabel13.setPreferredSize(new java.awt.Dimension(60, 60));
         gamePanel.add(squareLabel13);
@@ -261,7 +264,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         squareLabel20.setBackground(new java.awt.Color(50, 20, 5));
         squareLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
-        squareLabel20.setName("blackKing"); // NOI18N
+        squareLabel20.setName("black"); // NOI18N
         squareLabel20.setOpaque(true);
         gamePanel.add(squareLabel20);
 
@@ -307,8 +310,6 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel28);
 
         squareLabel29.setBackground(new java.awt.Color(50, 20, 5));
-        squareLabel29.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
-        squareLabel29.setName("black"); // NOI18N
         squareLabel29.setOpaque(true);
         gamePanel.add(squareLabel29);
 
@@ -352,8 +353,6 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel37);
 
         squareLabel38.setBackground(new java.awt.Color(50, 20, 5));
-        squareLabel38.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
-        squareLabel38.setName("red"); // NOI18N
         squareLabel38.setOpaque(true);
         gamePanel.add(squareLabel38);
 
@@ -379,6 +378,8 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel42);
 
         squareLabel43.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel43.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
+        squareLabel43.setName("red"); // NOI18N
         squareLabel43.setOpaque(true);
         gamePanel.add(squareLabel43);
 
@@ -388,6 +389,8 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel44);
 
         squareLabel45.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel45.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
+        squareLabel45.setName("red"); // NOI18N
         squareLabel45.setOpaque(true);
         gamePanel.add(squareLabel45);
 
@@ -397,6 +400,8 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel46);
 
         squareLabel47.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel47.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
+        squareLabel47.setName("red"); // NOI18N
         squareLabel47.setOpaque(true);
         gamePanel.add(squareLabel47);
 
@@ -411,6 +416,8 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel49);
 
         squareLabel50.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel50.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
+        squareLabel50.setName("red"); // NOI18N
         squareLabel50.setOpaque(true);
         squareLabel50.setPreferredSize(new java.awt.Dimension(60, 60));
         gamePanel.add(squareLabel50);
@@ -471,6 +478,8 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel60);
 
         squareLabel61.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel61.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
+        squareLabel61.setName("red"); // NOI18N
         squareLabel61.setOpaque(true);
         gamePanel.add(squareLabel61);
 
@@ -480,6 +489,8 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel62);
 
         squareLabel63.setBackground(new java.awt.Color(50, 20, 5));
+        squareLabel63.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
+        squareLabel63.setName("red"); // NOI18N
         squareLabel63.setOpaque(true);
         gamePanel.add(squareLabel63);
 
