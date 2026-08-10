@@ -260,7 +260,7 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.add(squareLabel19);
 
         squareLabel20.setBackground(new java.awt.Color(50, 20, 5));
-        squareLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/blackKing.png"))); // NOI18N
+        squareLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
         squareLabel20.setName("blackKing"); // NOI18N
         squareLabel20.setOpaque(true);
         gamePanel.add(squareLabel20);
