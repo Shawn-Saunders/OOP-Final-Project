@@ -20,8 +20,7 @@ public abstract class Piece {
     String color;
     int row;
     int col;
-    boolean isKing;
-    
+    int[][] directions;
     
     /**
      * Used to check if a piece can move to a potential square
@@ -97,7 +96,7 @@ public abstract class Piece {
         List<List<Jump>> allPaths = new ArrayList<>();
         
         // Determine which diretion offset needs to be used
-        int[][] directions = getDirections(isKing, color);
+        int[][] directions = this.directions;
         
         boolean nowKing = isKing;
         
@@ -154,22 +153,9 @@ public abstract class Piece {
         return false;
     }
     
-    public int[][] getDirections(boolean isKing, String color) {
-        if (isKing) {
-            // able to move all directions
-            return new int[][] {{1,1},{-1,-1},{1,-1},{-1,1}};
-        } else if (color.equals("black")){
-            // black moves down, which is positive in the array
-            return new int[][] {{1,-1},{1,1}};
-        } else {
-            // red moves up, which is negative values
-            return new int[][] {{-1,1},{-1,-1}}; 
-        }
-    }
-    
     public int[][] getCapturesFor(Piece[][] board, int destRow, int destCol) {
         List<int[]> captured = new ArrayList<>();
-        List<List<Jump>> paths = findJumpSequences(board, this.row, this.col, this.isKing, this.color, new ArrayList<>());
+        List<List<Jump>> paths = findJumpSequences(board, this.row, this.col, this instanceof King, this.color, new ArrayList<>());
         List<Jump> best = null;
         
         // Find the jump path that finishes on the square we were asked about
@@ -193,6 +179,10 @@ public abstract class Piece {
         return captured.toArray(new int[0][]);
     }
 
+    public boolean reachedBackRank(int row) {
+        return (color.equals("black") && row == Piece.MAX) ||
+               (color.equals("red") && row == Piece.MIN);
+    }
     
     /**
      * Simple debugging message to check how many jumps are possible for a selected piece

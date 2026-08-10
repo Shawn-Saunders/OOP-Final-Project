@@ -15,11 +15,11 @@ public class Regular extends Piece {
     /**
      * Constructor - Create Regular piece objects
      */
-    Regular(String color, int row, int col, boolean isKing) {
+    Regular(String color, int row, int col, int[][] directions) {
         this.color = color;
         this.row = row;
         this.col = col;
-        this.isKing = isKing;
+        this.directions = directions;
     }
     
     /**
@@ -33,8 +33,6 @@ public class Regular extends Piece {
         // because we dont know how many moves there will be
         List<int[]> validMoves = new ArrayList<>();
         
-        // get the direactions a regular piece can move
-        int[][] directions = getDirections(this.isKing, this.color);
         for (int[] direction : directions) {
             // check each direction to see if the piece can move there normally
             int[] result = checkCandidateSquares(board, direction[0], direction[1]);
@@ -46,7 +44,7 @@ public class Regular extends Piece {
         }
         
         // If there is an opponent, calculate jump
-        List<List<Jump>> jumpPaths = findJumpSequences(board, this.row, this.col, this.isKing, this.color, new ArrayList<>());
+        List<List<Jump>> jumpPaths = findJumpSequences(board, this.row, this.col, false, this.color, new ArrayList<>());
                 
         if (!jumpPaths.isEmpty()){
             // a jump exists, extract the landing squares from jumpPaths
@@ -56,7 +54,7 @@ public class Regular extends Piece {
             }
         }
         
-        // System.out.println(debugMessage(jumpPaths));
+        System.out.println(debugMessage(jumpPaths));
         // After the number of moves is determined, we can send the moves back
         // as a new int[][] like origonally planned
         return validMoves.toArray(new int[0][]);

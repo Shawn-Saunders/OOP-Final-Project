@@ -32,6 +32,9 @@ public class MainFrame extends javax.swing.JFrame {
     boolean gameOver = false;
     
     public final int BOARD_WIDTH = 8;
+    public final int[][] BLACK_MOVEMENT = new int[][] {{1,-1},{1,1}};
+    public final int[][] RED_MOVEMENT = new int[][] {{-1,1},{-1,-1}};
+    public final int[][] KING_MOVEMENT = new int[][] {{1,1},{-1,-1},{1,-1},{-1,1}};
     
     /**
      * Creates new form MainFrame
@@ -44,6 +47,7 @@ public class MainFrame extends javax.swing.JFrame {
         int row;
         int col;
         
+        
         // Create objects for all red and black pieces
         for(Component square : gamePanel.getComponents())
         {
@@ -52,14 +56,15 @@ public class MainFrame extends javax.swing.JFrame {
             col = index % BOARD_WIDTH;
             squareLabels[row][col] = piece;
             index++;
-            if("black".equals(piece.getName()))
-                board[row][col] = new Regular("black",row,col, false);
-            else if ("red".equals(piece.getName()))
-                board[row][col] = new Regular("red",row,col, false);
-            else if ("blackKing".equals(piece.getName()))
-                board[row][col] = new King("black",row,col, true);
-            else if ("redKing".equals(piece.getName()))
-                board[row][col] = new King("red",row,col, true);
+            if("black".equals(piece.getName())){
+                board[row][col] = new Regular("black",row,col, BLACK_MOVEMENT);
+            } else if ("red".equals(piece.getName())) {
+                board[row][col] = new Regular("red",row,col, RED_MOVEMENT);
+            } else if ("blackKing".equals(piece.getName())) {
+                board[row][col] = new King("black",row,col, KING_MOVEMENT);
+            } else if ("redKing".equals(piece.getName())){
+                board[row][col] = new King("red",row,col, KING_MOVEMENT);
+            }
         }
         
     }
@@ -648,7 +653,13 @@ public class MainFrame extends javax.swing.JFrame {
         board[oldRow][oldCol] = null;
         board[newRow][newCol] = piece;
         
+        // Promote the piece if it land on the back rank of the opposing side
+        if (!(piece instanceof King) && piece.reachedBackRank(newRow)) {
+            piece = new King(piece.color, newRow, newCol, KING_MOVEMENT);
+        }
+        
         // Updates the piece's own idea of where it is
+        board[newRow][newCol] = piece;
         piece.row = newRow;
         piece.col = newCol;
         
@@ -665,6 +676,7 @@ public class MainFrame extends javax.swing.JFrame {
                 new javax.swing.ImageIcon(getClass().getResource("/" + imageName + ".png")));
         squareLabels[newRow][newCol].setName(imageName);
     }
+
     /**
      * Counts the number of pieces left of each color on the board.
      * @param color The color of piece we are counting for.
