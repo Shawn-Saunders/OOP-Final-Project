@@ -529,12 +529,14 @@ public class MainFrame extends javax.swing.JFrame {
             } else {
                 selectedPiece = clickedPiece;
                 validMoves = movesFor(selectedPiece);
+                showGhostPieces();
                 System.out.println("Selected the " + selectedPiece.color
                         + " piece at row " + row + ", col " + col);
                 System.out.println("It has " + validMoves.length + " allowed move(s).");
             }
         } else {
             // The player is already holding a piece
+        clearGhostPieces();
         if (isValidDestination(row, col)) {
                 // Removes any pieces we jump over
                 for (int[] square : selectedPiece.getCapturesFor(board, row, col)) {
@@ -550,6 +552,7 @@ public class MainFrame extends javax.swing.JFrame {
                 // Clicked a different piece of their own, switch the selection to it
                 selectedPiece = clickedPiece;
                 validMoves = movesFor(selectedPiece);
+                showGhostPieces();
                 System.out.println("Switched to the piece at row " + row + ", col " + col);
                 System.out.println("It has " + validMoves.length + " allowed move(s).");
             } else {
@@ -676,7 +679,42 @@ public class MainFrame extends javax.swing.JFrame {
                 new javax.swing.ImageIcon(getClass().getResource("/" + imageName + ".png")));
         squareLabels[newRow][newCol].setName(imageName);
     }
+    
+    /**
+     * Generates a ghost piece where the piece can land
+     * @param piece The last location of a path or the potential squares a piece can go to
+     * @param newRow The row of the possible location
+     * @param newCol The column of the possible location
+     */
+    public void showGhostPiece(Piece piece, int newRow, int newCol) {
+        squareLabels[newRow][newCol].setIcon(
+                new javax.swing.ImageIcon(getClass().getResource("/greyCircle.png")));
+    }
+    /*
+     * Draws a grey circle on every square the selected piece can move to
+     */
+    private void showGhostPieces() {
+        if (validMoves == null) {
+            return;
+        }
+        for (int[] move : validMoves) {
+            showGhostPiece(selectedPiece, move[0], move[1]);
+        }
+    }
 
+    /*
+     * Removes the grey circles from the board.
+    */
+    private void clearGhostPieces() {
+        if (validMoves == null) {
+            return;
+        }
+        for (int[] move : validMoves) {
+            squareLabels[move[0]][move[1]].setIcon(null);
+        }
+    }
+    
+    
     /**
      * Counts the number of pieces left of each color on the board.
      * @param color The color of piece we are counting for.

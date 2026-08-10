@@ -98,45 +98,35 @@ public abstract class Piece {
         // Determine which diretion offset needs to be used
         int[][] directions = this.directions;
         
-        boolean nowKing = isKing;
+
         
         // loop limited by isKing before iteration, nowKing will not affect it
         for (int[] direction : directions){
             // for each direction check if a jump is possible, then create a new jump
             Jump jump = checkForJump(board, row, col, direction[0], direction[1], color);
-            
             // Check if there is a possible jump and that the piece has not already been captured
             if (jump != null && !alreadyCaptured(pathSoFar, jump)) {
-                // If the piece reaches the back rank, make the piece a king
-                if (jump.landsAt[0] == 0 || jump.landsAt[0] == MAX) {
-                    nowKing = true;
-                }
-                // System.out.println("At (" + row + "," + col + ") -> landing (" + jump.landsAt[0] + "," + jump.landsAt[1] + "), isKing was " + isKing + ", nowKing = " + nowKing);
-                
-                List<Jump> newPath = new ArrayList<>(pathSoFar);
-                newPath.add(jump);
-                // Make a list of lists to recursively search for new moves
-                List<List<Jump>> furtherPaths = findJumpSequences(board, jump.landsAt[0], jump.landsAt[1], nowKing, color, newPath);
-                
-                // If there are no further paths then return the current Jump
-                if (furtherPaths.isEmpty()){
-                    allPaths.add(newPath);
-                } else {
-                    // if there are more paths then note where the piece lands, the path it took, then return the combined list of Jumps
-                    // Note: The piece cannot return to its original position in the rare event of a diamond currently
-                    for (List<Jump> path : furtherPaths) {
-                        List<Jump> combined = new ArrayList<>();
-                        // combine the paths then add the combined paths to return all possible paths
-                        combined.addAll(path);
-                        allPaths.add(combined);
-                    }
-                }
+            List<Jump> newPath = new ArrayList<>(pathSoFar);
+            newPath.add(jump);
+
+            if (!isKing && (jump.landsAt[0] == MIN || jump.landsAt[0] == MAX)) {
+                allPaths.add(newPath);
+                continue;
+            }
+           
+            List<List<Jump>> furtherPaths = findJumpSequences(board, jump.landsAt[0], jump.landsAt[1], isKing, color, newPath);
+            
+            if (furtherPaths.isEmpty()){
+                allPaths.add(newPath);
+            } else {
+                allPaths.addAll(furtherPaths);
             }
         }
-        
-        
-        return allPaths;
     }
+    
+    return allPaths;
+}
+
     
     /**
      * Check if the square has already been "captured"
