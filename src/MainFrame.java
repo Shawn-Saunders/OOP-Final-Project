@@ -6,8 +6,8 @@ import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 /**
- *
- * @author Devin
+ *the Main class to run the JFrame
+ * @author Shawn Saunders & Ishaan Malhotra
  */
 public class MainFrame extends javax.swing.JFrame {
     
@@ -544,10 +544,12 @@ public class MainFrame extends javax.swing.JFrame {
             // The player is already holding a piece
         clearGhostPieces();
         if (isValidDestination(row, col)) {
-                // Removes any pieces we jump over
+                
+                // check if the piece should be promoted during the move
                 boolean shouldPromote = !(selectedPiece instanceof King)
                         && selectedPiece.crossedBackRank(board, row, col);
 
+                // Removes any pieces we jump over
                 for (int[] square : selectedPiece.getCapturesFor(board, row, col)) {
                     removePiece(square[0], square[1]);
                 }
@@ -661,6 +663,8 @@ public class MainFrame extends javax.swing.JFrame {
         int oldRow = piece.row;
         int oldCol = piece.col;
 
+        // check if the piece should have promoted during the move, 
+        // if it has then promote the piece to king
         if (shouldPromote) {
             piece = new King(piece.color, newRow, newCol, KING_MOVEMENT); 
         }
