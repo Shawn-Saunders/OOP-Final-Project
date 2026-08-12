@@ -13,6 +13,10 @@ public class MainFrame extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainFrame.class.getName());
 
+    // global variables for the row and column for the keyboard cursor
+    int cursorRow = 0;
+    int cursorCol = 0;
+    
     // Create an array to hold all the information from each square
     JLabel[][] squareLabels = new JLabel[8][8];
     
@@ -31,10 +35,12 @@ public class MainFrame extends javax.swing.JFrame {
     // Boolean to see if one of the player has won, is set to true when conditions are met.
     boolean gameOver = false;
     
+    // Global constant variables
     public final int BOARD_WIDTH = 8;
     public final int[][] BLACK_MOVEMENT = new int[][] {{1,-1},{1,1}};
     public final int[][] RED_MOVEMENT = new int[][] {{-1,1},{-1,-1}};
     public final int[][] KING_MOVEMENT = new int[][] {{1,1},{-1,-1},{1,-1},{-1,1}};
+    public static final java.awt.Color CURSOR_HIGHLIGHT = new java.awt.Color(230, 194, 128);
     
     /**
      * Creates new form MainFrame
@@ -46,7 +52,6 @@ public class MainFrame extends javax.swing.JFrame {
         int index = 0;
         int row;
         int col;
-        
         
         // Create objects for all red and black pieces
         for(Component square : gamePanel.getComponents())
@@ -67,6 +72,10 @@ public class MainFrame extends javax.swing.JFrame {
             }
         }
         
+        // set the cursor and force the gamePanel to have focus
+        moveCursor(cursorRow, cursorCol);
+        gamePanel.setFocusable(true);
+        gamePanel.requestFocusInWindow();
     }
 
     
@@ -152,6 +161,11 @@ public class MainFrame extends javax.swing.JFrame {
         gamePanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 gamePanelMousePressed(evt);
+            }
+        });
+        gamePanel.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                gamePanelKeyPressed(evt);
             }
         });
         gamePanel.setLayout(new java.awt.GridLayout(8, 8));
@@ -516,23 +530,76 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void gamePanelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gamePanelMousePressed
         // Checks if somebody has already won and in that case ignores any further clicks.
-        if (gameOver) {
-            return;
+        if (gameOver) return;
+        
+        
+        try {
+            final int SQUARE_SIZE = 60;
+            int row = evt.getY() / SQUARE_SIZE;
+            int col = evt.getX() / SQUARE_SIZE;
+            handleActivatedSquare(row, col);
+
+            // make sure the keyboard is still focused after a click event
+            gamePanel.requestFocusInWindow();
+        } catch (IllegalMoveException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Invalid Move", JOptionPane.WARNING_MESSAGE);
         }
-        final int SQUARE_SIZE = 60;
-        int row = evt.getY() / SQUARE_SIZE;
-        int col = evt.getX() / SQUARE_SIZE;
-         // Whatever piece is sitting on the square we just clicked
+    }
+    
+    /**
+     * Method to move the keyboard cursor to a new square
+     * throw an exception if the user tries to move off the board
+     * @param newRow The new row the cursor will be going to
+     * @param newCol The new column the cursor will be going to
+     */
+    private void moveCursor(int newRow, int newCol) {
+        if (newRow < 0 || newRow > BOARD_WIDTH - 1 || newCol < 0 || newCol > BOARD_WIDTH - 1) {
+            // throw message was for testing purposes, the actual exceptions do not send a message
+            throw new IllegalArgumentException("Cursor position (" + newRow + "," + newCol + ") is outside the board.");
+        }
+        
+        // Restore the original background color of the previous square
+        squareLabels[cursorRow][cursorCol].setBackground(baseColorFor(cursorRow, cursorCol));
+        
+        // update the active cursor position
+        cursorRow = newRow;
+        cursorCol = newCol;
+        
+        // color the new cursor position
+        squareLabels[cursorRow][cursorCol].setBackground(CURSOR_HIGHLIGHT);
+    }
+    
+    /**
+     * A method that handles the logic of selecting a square 
+     * @param row the selected row
+     * @param col the selected column
+     * @throws MainFrame.NoValidMovesException Exception to enforce if the piece has no valid moves
+     * @throws MainFrame.IllegalMoveException  General Exception for any illegal moves
+     */
+    private void handleActivatedSquare(int row, int col) throws NoValidMovesException, IllegalMoveException{
+        // Whatever piece is sitting on the square we just clicked
         // This is null if the square is empty
         Piece clickedPiece = board[row][col];
+        
+        // check the entire board for forced jump rule
+        boolean boardHasJump = (bestCaptureCount(currentTurn) > 0);
         
         if (selectedPiece == null) {
             // First click, the player is trying to pick a piece up
             if (clickedPiece == null) {
-                System.out.println("Empty square, nothing to pick up.");
+                return;
             } else if (!clickedPiece.color.equals(currentTurn)){
-                System.out.println("It is " + currentTurn + "'s turn, so that piece can't move.");
-            } else {
+                throw new IllegalMoveException("It is " + currentTurn + "'s turn, so that piece can't move.");
+            } else {   
+                
+                // Clicked a different piece of their own, switch the selection to it
+                int[][] allowedMoves = movesFor(clickedPiece);
+                
+                // check if the new piece has any valid moves available
+                if (allowedMoves == null || allowedMoves.length == 0){
+                    throw new NoValidMovesException("This piece has no valid moves available.");
+                }
+                
                 selectedPiece = clickedPiece;
                 validMoves = movesFor(selectedPiece);
                 showGhostPieces();
@@ -560,6 +627,15 @@ public class MainFrame extends javax.swing.JFrame {
                 switchTurn();
                 checkForGameOver();
             } else if (clickedPiece != null && clickedPiece.color.equals(currentTurn)) {
+                
+                // Clicked a different piece of their own, switch the selection to it
+                int[][] allowedMoves = movesFor(clickedPiece);
+                
+                // check if the new piece has any valid moves available
+                if (allowedMoves == null || allowedMoves.length == 0){
+                    throw new NoValidMovesException("This piece has no valid moves available.");
+                }
+                
                 // Clicked a different piece of their own, switch the selection to it
                 selectedPiece = clickedPiece;
                 validMoves = movesFor(selectedPiece);
@@ -567,15 +643,64 @@ public class MainFrame extends javax.swing.JFrame {
                 System.out.println("Switched to the piece at row " + row + ", col " + col);
                 System.out.println("It has " + validMoves.length + " allowed move(s).");
             } else {
-                System.out.println("Not a legal move, deselecting.");
                 selectedPiece = null;
                 validMoves = null;
+                throw new IllegalMoveException("Not a legal move for this piece."); 
             }
         }
         
         System.out.println("--------------------------");
     }//GEN-LAST:event_gamePanelMousePressed
 
+    private void gamePanelKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_gamePanelKeyPressed
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_UP) {
+            try {
+                moveCursor(cursorRow - 1, cursorCol);
+            } catch (IllegalArgumentException ex) {
+                // Silently ignore the exception
+            }
+        } else if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_DOWN) {
+            try {
+                moveCursor(cursorRow + 1, cursorCol);
+            } catch (IllegalArgumentException ex) {
+                // Silently ignore the exception
+            }
+        } else if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_LEFT) {
+            try {
+                moveCursor(cursorRow, cursorCol - 1);
+            } catch (IllegalArgumentException ex) {
+                // Silently ignore the exception
+            }
+        } else if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_RIGHT) {
+            try {
+                moveCursor(cursorRow, cursorCol + 1);
+            } catch (IllegalArgumentException ex) {
+                // Silently ignore the exception
+            }
+        }
+        
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            try {
+                handleActivatedSquare(cursorRow, cursorCol);
+            } catch (IllegalMoveException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Invalid Move", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_gamePanelKeyPressed
+
+    /**
+     * A simple method to return a square to it's original color
+     * after the cursor moves off the square
+     * @param row the row the cursor is on
+     * @param col the column the cursor is on
+     * @return 
+     */
+    private java.awt.Color baseColorFor(int row, int col) {
+    return (row + col) % 2 == 0
+            ? new java.awt.Color(115, 55, 10)
+            : new java.awt.Color(50, 20, 5);
+}
+    
     /**
      * @param args the command line arguments
      */
@@ -675,7 +800,6 @@ public class MainFrame extends javax.swing.JFrame {
         
         
         // Updates the piece's own idea of where it is
-        board[newRow][newCol] = piece;
         piece.row = newRow;
         piece.col = newCol;
         
@@ -763,6 +887,26 @@ public class MainFrame extends javax.swing.JFrame {
         }
         return false;
     }
+    
+    /**
+     * Exception to be thrown when a player selects a piece with no valid moves
+     */
+    class NoValidMovesException extends IllegalMoveException {
+        public NoValidMovesException(String message) {
+            super(message);
+        }
+    }
+    
+    /**
+     * General exception to be thrown when a player tries to
+     * break the rules for movement
+     */
+    class IllegalMoveException extends IllegalArgumentException {
+        public IllegalMoveException(String message){
+            super(message);
+        }
+    }
+    
     private void checkForGameOver() {
         // The player whose turn it is can still make moves and the game continues.
         if (hasLegalMoves(currentTurn)) {

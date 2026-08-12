@@ -42,6 +42,7 @@
       </Properties>
       <Events>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="gamePanelMousePressed"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="gamePanelKeyPressed"/>
       </Events>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
