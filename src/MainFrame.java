@@ -56,6 +56,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton saveButton;
     private javax.swing.JButton loadButton;
     private javax.swing.JButton resetButton;
+    private javax.swing.JLabel turnTracker;
     
     /**
      * Creates new form MainFrame
@@ -111,9 +112,11 @@ public class MainFrame extends javax.swing.JFrame {
         saveButton = new javax.swing.JButton("Save");
         loadButton = new javax.swing.JButton("Load");
         resetButton = new javax.swing.JButton("Reset");
+        turnTracker = new javax.swing.JLabel(" It is now " + currentTurn + "'s turn. ");
         saveButton.setFocusable(false);
         loadButton.setFocusable(false);
         resetButton.setFocusable(false);
+        turnTracker.setFocusable(false);
         
         saveButton.addActionListener(evt -> saveGame());
         loadButton.addActionListener(evt -> loadGame());
@@ -123,6 +126,10 @@ public class MainFrame extends javax.swing.JFrame {
         controlPanel.add(saveButton);
         controlPanel.add(loadButton);
         controlPanel.add(resetButton);
+        controlPanel.add(turnTracker);
+        
+        turnTracker.setBorder(javax.swing.BorderFactory.createLineBorder( new java.awt.Color(50, 50, 50)));
+        
         getContentPane().removeAll();
         getContentPane().setLayout(new java.awt.BorderLayout());
         getContentPane().add(gamePanel, java.awt.BorderLayout.CENTER);
@@ -295,7 +302,6 @@ public class MainFrame extends javax.swing.JFrame {
         squareLabel13.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/black.png"))); // NOI18N
         squareLabel13.setName("black"); // NOI18N
         squareLabel13.setOpaque(true);
-        squareLabel13.setPreferredSize(new java.awt.Dimension(60, 60));
         gamePanel.add(squareLabel13);
 
         squareLabel14.setBackground(new java.awt.Color(115, 55, 10));
@@ -487,7 +493,6 @@ public class MainFrame extends javax.swing.JFrame {
         squareLabel50.setIcon(new javax.swing.ImageIcon(getClass().getResource("/red.png"))); // NOI18N
         squareLabel50.setName("red"); // NOI18N
         squareLabel50.setOpaque(true);
-        squareLabel50.setPreferredSize(new java.awt.Dimension(60, 60));
         gamePanel.add(squareLabel50);
 
         squareLabel51.setBackground(new java.awt.Color(115, 55, 10));
@@ -789,7 +794,8 @@ public class MainFrame extends javax.swing.JFrame {
         } else {
             currentTurn = "black";
         }
-        System.out.println("It is now " + currentTurn + "'s turn.");
+        turnTracker.setText(" It is now " + currentTurn + "'s turn. ");
+        // System.out.println(" It is now " + currentTurn + "'s turn. ");
     }
     /**
      * Checks if the destination is a legal move for the selected piece.
@@ -1131,7 +1137,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
         
         applyLayout(codes, turn);
-        System.out.println("Game loaded. It is " + currentTurn + "'s turn.");
+        JOptionPane.showMessageDialog(this, "Game loaded. It is " + currentTurn + "'s turn", "Who's turn is it", JOptionPane.INFORMATION_MESSAGE);
     }
     
     /**
