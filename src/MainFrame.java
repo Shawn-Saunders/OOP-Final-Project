@@ -42,6 +42,21 @@ public class MainFrame extends javax.swing.JFrame {
     public final int[][] KING_MOVEMENT = new int[][] {{1,1},{-1,-1},{1,-1},{-1,1}};
     public static final java.awt.Color CURSOR_HIGHLIGHT = new java.awt.Color(230, 194, 128);
     
+    // Save/Load/Reset 
+    private static final String SAVE_FILE = "savegame.txt";
+    
+    // Code for a square with nothing on it
+    private static final String EMPTY_SQUARE = "-";
+    
+    // How the board looked before anybody moved.
+    // The reset button puts this back.
+    private final String[][] startingLayout = new String[8][8];
+    
+    // The three control buttons. Found out the way to write them instead so it doesn't mess with the current board.
+    private javax.swing.JButton saveButton;
+    private javax.swing.JButton loadButton;
+    private javax.swing.JButton resetButton;
+    
     /**
      * Creates new form MainFrame
      */
@@ -72,10 +87,49 @@ public class MainFrame extends javax.swing.JFrame {
             }
         }
         
+        // Remember what the board looked like before anybody moved.
+        // Position the reset button restores.
+        for (int r = 0; r < BOARD_WIDTH; r++) {
+            for (int c = 0; c < BOARD_WIDTH; c++) {
+                startingLayout[r][c] = (board[r][c] == null)
+                        ? EMPTY_SQUARE
+                        : imageNameFor(board[r][c]);
+            }
+        }
+        
+        // Add the buttons under the board
+        buildControlPanel();
+        
         // set the cursor and force the gamePanel to have focus
         moveCursor(cursorRow, cursorCol);
         gamePanel.setFocusable(true);
         gamePanel.requestFocusInWindow();
+    }
+    
+    //Builds the row of Save / Load / Reset buttons and puts them under the board
+    private void buildControlPanel() {
+        saveButton = new javax.swing.JButton("Save");
+        loadButton = new javax.swing.JButton("Load");
+        resetButton = new javax.swing.JButton("Reset");
+        saveButton.setFocusable(false);
+        loadButton.setFocusable(false);
+        resetButton.setFocusable(false);
+        
+        saveButton.addActionListener(evt -> saveGame());
+        loadButton.addActionListener(evt -> loadGame());
+        resetButton.addActionListener(evt -> resetGame());
+        
+        javax.swing.JPanel controlPanel = new javax.swing.JPanel();
+        controlPanel.add(saveButton);
+        controlPanel.add(loadButton);
+        controlPanel.add(resetButton);
+        getContentPane().removeAll();
+        getContentPane().setLayout(new java.awt.BorderLayout());
+        getContentPane().add(gamePanel, java.awt.BorderLayout.CENTER);
+        getContentPane().add(controlPanel, java.awt.BorderLayout.SOUTH);
+        
+        pack();
+        setLocationRelativeTo(null);
     }
 
     
@@ -965,6 +1019,182 @@ public class MainFrame extends javax.swing.JFrame {
         }
         return allowed.toArray(new int[0][]);
     }
+    /**
+     * Makes a piece into the short code we write into the save file.
+     * @param piece The piece on the square, or null for an empty square
+     * @return "black", "red", "blackKing", "redKing" or "-"
+     */
+    private String codeFor(Piece piece) {
+        return (piece == null) ? EMPTY_SQUARE : imageNameFor(piece);
+    }
+    
+    /**
+     * Turns the code read out of the saved file back into a real object.
+     * @param code One of "black", "red", "blackKing", "redKing" or "-"
+     * @param row The row the piece belongs on
+     * @param col The column the piece belongs on
+     * @return A new Piece, or null if the square should be empty
+     */
+    private Piece pieceFor(String code, int row, int col) {
+        switch (code) {
+            case "black":
+                return new Regular("black", row, col, BLACK_MOVEMENT);
+            case "red":
+                return new Regular("red", row, col, RED_MOVEMENT);
+            case "blackKing":
+                return new King("black", row, col, KING_MOVEMENT);
+            case "redKing":
+                return new King("red", row, col, KING_MOVEMENT);
+            default:
+                return null;
+        }
+    }
+    
+    /**
+     * Writes the current state to the save file.
+     * @return true if the file was written, false if something went wrong
+     */
+    private boolean writeSaveFile() {
+        try (java.io.PrintWriter out = new java.io.PrintWriter(new java.io.FileWriter(SAVE_FILE))) {
+            // Whose turn it is has to be saved too
+            out.println(currentTurn);
+            
+            for (int row = 0; row < BOARD_WIDTH; row++) {
+                StringBuilder line = new StringBuilder();
+                for (int col = 0; col < BOARD_WIDTH; col++) {
+                    if (col > 0) {
+                        line.append(",");
+                    }
+                    line.append(codeFor(board[row][col]));
+                }
+                out.println(line);
+            }
+            return true;
+        } catch (java.io.IOException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "The game could not be saved.\n" + ex.getMessage(),
+                    "Save Failed", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+    
+    /**
+     * Save button. Writes the position to disk and tells the player where it went.
+     */
+    private void saveGame() {
+        if (writeSaveFile()) {
+            String path = new java.io.File(SAVE_FILE).getAbsolutePath();
+            System.out.println("Game saved to " + path);
+            JOptionPane.showMessageDialog(this, "Game saved to:\n" + path,
+                    "Game Saved", JOptionPane.INFORMATION_MESSAGE);
+        }
+        gamePanel.requestFocusInWindow();
+    }
+    
+    /**
+     * Load button. Reads the save file and puts that position on the board.
+     */
+    private void loadGame() {
+        java.io.File file = new java.io.File(SAVE_FILE);
+        
+        if (!file.exists()) {
+            JOptionPane.showMessageDialog(this, "There is no saved game to load yet.",
+                    "Nothing To Load", JOptionPane.WARNING_MESSAGE);
+            gamePanel.requestFocusInWindow();
+            return;
+        }
+        
+        // Loading throws away whatever game is on the board, so ask first
+        int answer = JOptionPane.showConfirmDialog(this,
+                "Load the saved game? The game on the board will be lost.",
+                "Load Game", JOptionPane.YES_NO_OPTION);
+        if (answer != JOptionPane.YES_OPTION) {
+            gamePanel.requestFocusInWindow();
+            return;
+        }
+        
+        String turn;
+        String[][] codes = new String[BOARD_WIDTH][BOARD_WIDTH];
+        
+        try (java.util.Scanner in = new java.util.Scanner(file)) {
+            // First line is whose turn it is, then one line per row of the board
+            turn = in.nextLine().trim();
+            
+            for (int row = 0; row < BOARD_WIDTH; row++) {
+                codes[row] = in.nextLine().trim().split(",");
+            }
+        } catch (java.io.FileNotFoundException | java.util.NoSuchElementException ex) {
+            JOptionPane.showMessageDialog(this, "The save file could not be read.",
+                    "Load Failed", JOptionPane.ERROR_MESSAGE);
+            gamePanel.requestFocusInWindow();
+            return;
+        }
+        
+        applyLayout(codes, turn);
+        System.out.println("Game loaded. It is " + currentTurn + "'s turn.");
+    }
+    
+    /**
+     * Reset button. Puts the opening position back and updates the save file
+     * match it.
+     */
+    private void resetGame() {
+        int answer = JOptionPane.showConfirmDialog(this,
+                "Start a new game? This also overwrites the save file.",
+                "Reset Game", JOptionPane.YES_NO_OPTION);
+        if (answer != JOptionPane.YES_OPTION) {
+            gamePanel.requestFocusInWindow();
+            return;
+        }
+        
+        // Black always goes first at the start of a game
+        applyLayout(startingLayout, "black");
+        
+        // Put the keyboard cursor back in the corner
+        moveCursor(0, 0);
+        
+        // The save file now holds the opening position
+        writeSaveFile();
+        System.out.println("Board reset. It is " + currentTurn + "'s turn.");
+    }
+    
+    /**
+     * Rebuilds both the logical board and the visual board
+     * @param codes An 8x8 grid of piece codes
+     * @param turn The color that moves next, "black" or "red"
+     */
+    private void applyLayout(String[][] codes, String turn) {
+        // Whatever the player had picked up belongs to the old position
+        selectedPiece = null;
+        validMoves = null;
+        
+        for (int row = 0; row < BOARD_WIDTH; row++) {
+            for (int col = 0; col < BOARD_WIDTH; col++) {
+                String code = codes[row][col].trim();
+                
+                // Rebuild the logical board
+                board[row][col] = pieceFor(code, row, col);
+                
+                // Rebuild the visual board so it matches.
+                if (board[row][col] == null) {
+                    squareLabels[row][col].setIcon(null);
+                    squareLabels[row][col].setName(null);
+                } else {
+                    squareLabels[row][col].setIcon(new javax.swing.ImageIcon(
+                            getClass().getResource("/" + code + ".png")));
+                    squareLabels[row][col].setName(code);
+                }
+            }
+        }
+        
+        currentTurn = turn;
+        
+        gameOver = false;
+        checkForGameOver();
+        
+        gamePanel.requestFocusInWindow();
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel gamePanel;
     private javax.swing.JLabel squareLabel1;
