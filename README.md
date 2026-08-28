@@ -4,7 +4,7 @@
 
 ## Overview
 
-A two-player desktop checkers game using Netbeans to build a GUI based application.
+A two-player desktop checkers game built in Java using Swing.
 
 ## Project Context
 
