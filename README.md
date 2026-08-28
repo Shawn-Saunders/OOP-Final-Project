@@ -18,6 +18,7 @@ A two-player desktop checkers game developed as a final group project for Object
 
 - Two-player gameplay
 - Move validation
+- Full keyboard accessibility
 - Piece movement
 - Capture logic
 - Game-state management
